@@ -7,7 +7,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
 public class Account {
 
@@ -17,3 +16,4 @@ public class Account {
     private String name;
     private double balance;
 }
+
