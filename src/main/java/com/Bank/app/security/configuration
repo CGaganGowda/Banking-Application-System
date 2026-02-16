@@ -1,0 +1,12 @@
+@Configuration
+public class SpringSecurityConfig{
+
+  @Bean
+  SecurityFilterChain securityFilterChain(HttpSecurity http){
+    http.csrf((csrf)->csrf.disable())
+      .authorizeHttpRequest((authorizer)->{
+      authorizer.authorizeAnyRequest().authenticated();})
+      .httpBasic(Customizer.WithDefaults());
+    return http.build();
+  }
+}
