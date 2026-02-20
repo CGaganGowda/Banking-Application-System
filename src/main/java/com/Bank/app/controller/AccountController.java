@@ -21,7 +21,7 @@ public class AccountController {
 
 
 
-    @PostMapping("create")
+    @PostMapping("")
     public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto accountDto) {
         return new ResponseEntity<>(accountService.createAccount(accountDto), HttpStatus.CREATED);
     }
@@ -48,7 +48,7 @@ public class AccountController {
         return new ResponseEntity<>(accountService.getAllAccounts(),HttpStatus.OK);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<String> deleteAccount(@PathVariable Long id){
         accountService.deleteAccountById(id);
         return new ResponseEntity<>("Account Deleted with id : "+id, HttpStatus.OK);
@@ -67,3 +67,4 @@ public class AccountController {
 
 
 }
+
