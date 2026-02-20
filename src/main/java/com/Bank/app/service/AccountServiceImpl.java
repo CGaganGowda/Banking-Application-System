@@ -46,6 +46,7 @@ public class AccountServiceImpl implements AccountService {
 //        this.accountMapper = accountMapper;
 //    }
 
+    //Create an Account
     @Override
     public AccountDto createAccount(AccountDto accountDto) {
         Account account = accountMapper.toAccount(accountDto);
@@ -170,3 +171,4 @@ public class AccountServiceImpl implements AccountService {
     }
 
 }
+
