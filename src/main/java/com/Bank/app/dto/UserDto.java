@@ -1,4 +1,4 @@
-package com.Management.todo.dto;
+package com.Bank.app.dto;
 
 
 import com.Management.todo.model.Role;
@@ -19,3 +19,4 @@ public class UserDto {
     private String password;
     private String email;
 }
+
