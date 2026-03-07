@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("api/accounts")
 public class AccountController {
 
@@ -67,4 +68,5 @@ public class AccountController {
 
 
 }
+
 
