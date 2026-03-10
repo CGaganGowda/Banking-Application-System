@@ -1,10 +1,10 @@
-package com.Management.todo.controller;
+package com.Bank.app.controller;
 
-import com.Management.todo.dto.JwtAuthResponse;
-import com.Management.todo.dto.LoginDto;
-import com.Management.todo.dto.UserDto;
-import com.Management.todo.model.User;
-import com.Management.todo.service.AuthService;
+// import com.Management.todo.dto.JwtAuthResponse;
+// import com.Management.todo.dto.LoginDto;
+// import com.Management.todo.dto.UserDto;
+// import com.Management.todo.model.User;
+// import com.Management.todo.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,3 +35,4 @@ public class AuthController {
        return new ResponseEntity<>(jwtAuthResponse, HttpStatus.OK);
     }
 }
+
