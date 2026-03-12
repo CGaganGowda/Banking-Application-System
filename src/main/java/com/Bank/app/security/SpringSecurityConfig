@@ -5,7 +5,12 @@ public class SpringSecurityConfig{
   SecurityFilterChain securityFilterChain(HttpSecurity http){
     http.csrf((csrf)->csrf.disable())
       .authorizeHttpRequest((authorizer)->{
-      authorizer.authorizeAnyRequest().authenticated();})
+      authorizer.authorizeAnyRequest().authenticated();
+//                    authorize.requestMatchers(HttpMethod.POST,"/product/**").hasRole("ADMIN");
+                    authorize.requestMatchers(HttpMethod.GET).permitAll();
+//                    authorize.requestMatchers(HttpMethod.PUT,"/product/**").hasRole("ADMIN");
+                    authorize.requestMatchers(HttpMethod.POST,"/auth/**").permitAll();
+})
       .httpBasic(Customizer.WithDefaults());
     return http.build();
   }
