@@ -27,16 +27,10 @@ import java.util.stream.Collectors;
 @Service
 public class AccountServiceImpl implements AccountService {
 
-    @Autowired
+  
     private AccountMapper accountMapper;
-
-    @Autowired
     private AccountRepository accountRepository;
-
-    @Autowired
     private TransactionRepository transactionRepository;
-
-    @Autowired
     private TransactionMapper transactionMapper;
 
     private static final String TRANSACTION_TYPE_DEPOSIT = "DEPOSIT";
@@ -171,4 +165,5 @@ public class AccountServiceImpl implements AccountService {
     }
 
 }
+
 
