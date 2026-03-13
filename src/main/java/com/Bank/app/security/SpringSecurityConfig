@@ -16,6 +16,12 @@ public class SpringSecurityConfig{
   }
 }
 
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration){
+        return configuration.getAuthenticationManager();
+    }
+
+  //    @Bean
 //    public UserDetailsService userDetailsService(){
 //        UserDetails admin = User.builder()
 //                .username("admin")
