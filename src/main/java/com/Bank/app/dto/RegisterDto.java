@@ -1,3 +1,5 @@
+//Test Code - AuthService | AuthController (LDAP & JWT)
+/*
 package com.Bank.app.dto;
 
 import lombok.AllArgsConstructor;
@@ -15,3 +17,4 @@ public class RegisterDto {
     private String email;
     private String name;
 }
+*/
