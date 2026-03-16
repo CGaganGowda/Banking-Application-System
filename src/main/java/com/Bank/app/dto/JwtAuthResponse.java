@@ -1,4 +1,4 @@
-package com.Management.todo.dto;
+package com.Bank.app.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
