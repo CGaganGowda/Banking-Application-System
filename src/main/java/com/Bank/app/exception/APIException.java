@@ -1,4 +1,4 @@
-
+package com.Bank.app.exception;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
