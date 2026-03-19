@@ -1,7 +1,7 @@
-package com.Management.todo.repo;
+package com.Bank.app.repo;
 
 
-import com.Management.todo.model.User;
+import com.Bank.app.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
