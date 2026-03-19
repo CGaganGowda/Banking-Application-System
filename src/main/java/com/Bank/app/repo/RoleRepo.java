@@ -1,6 +1,6 @@
-package com.Management.todo.repo;
+package com.Bank.app.repo;
 
-import com.Management.todo.model.Role;
+import com.Bank.app.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RoleRepo extends JpaRepository<Role, Long> {
