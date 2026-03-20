@@ -1,7 +1,7 @@
-package com.Management.todo.security;
+package com.Bank.app.security;
 
-import com.Management.todo.model.User;
-import com.Management.todo.repo.UserRepo;
+import com.Bank.app.model.User;
+import com.Bank.app.repo.UserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
