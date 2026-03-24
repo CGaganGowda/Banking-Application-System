@@ -44,4 +44,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
+    
+    @ExceptionHandler(value = APIException.class)
+    public ResponseEntity<ErrorDetails> handleTodoApiException(APIException exception, WebRequest request){
+        ErrorDetails errorDetails = new ErrorDetails(
+                exception.getMessage(),
+                "API_EXCEPTION",
+                request.getDescription(false),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
 }
