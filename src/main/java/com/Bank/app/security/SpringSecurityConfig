@@ -1,51 +1,88 @@
-@Configuration
-public class SpringSecurityConfig{
+package com.Management.todo.config;
 
-  @Bean
-  SecurityFilterChain securityFilterChain(HttpSecurity http){
-    http.csrf((csrf)->csrf.disable())
-      .authorizeHttpRequest((authorizer)->{
-      authorizer.authorizeAnyRequest().authenticated();
-//                    authorize.requestMatchers(HttpMethod.POST,"/product/**").hasRole("ADMIN");
-                    authorize.requestMatchers(HttpMethod.GET).permitAll();
-//                    authorize.requestMatchers(HttpMethod.PUT,"/product/**").hasRole("ADMIN");
-                    authorize.requestMatchers(HttpMethod.POST,"/auth/**").permitAll();
-})
-      .httpBasic(Customizer.WithDefaults());
-    return http.build();
-  }
-}
+import com.Management.todo.security.JwtAuthenticationEntryPoint;
+import com.Management.todo.security.JwtAuthenticationFilter;
+import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@AllArgsConstructor
+@Configuration
+@EnableMethodSecurity
+public class SpringSecurityConfig {
+
+    @Bean
+    public static PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf((csrf)->csrf.disable())
+                .authorizeHttpRequests( (authorize) -> {
+//                    authorize.requestMatchers(HttpMethod.POST,"/api/**").hasRole("admin");
+//                    authorize.requestMatchers(HttpMethod.PUT,"/api/**").hasRole("admin");
+//                    authorize.requestMatchers(HttpMethod.DELETE,"/api/**").hasRole("admin");
+//                    authorize.requestMatchers(HttpMethod.PATCH,"/api/**").hasAnyRole("admin","student");
+//                    authorize.requestMatchers(HttpMethod.GET,"/api/**").hasAnyRole("admin","user");
+                    authorize.requestMatchers("/auth/**").permitAll();
+                    authorize.anyRequest().authenticated();
+                }).httpBasic(Customizer.withDefaults());
+
+
+        //Un-Authorized users gets exception message from here
+        http.exceptionHandling(
+                exception -> exception
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+        );
+        //Authentication-Filter class to execute before spring security filters(UsernamePasswordAuthenticationFilter)
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration){
         return configuration.getAuthenticationManager();
     }
 
-  //    @Bean
-//    public UserDetailsService userDetailsService(){
-//        UserDetails admin = User.builder()
-//                .username("admin")
-//                .password(passwordEncoder().encode("admin"))
-//                .roles("admin")
-//                .build();
-//
-//        UserDetails manager = User.builder()
-//                .username("manager")
-//                .password(passwordEncoder().encode("1234"))
-//                .roles("manager")
-//                .build();
-//
-//        UserDetails employee = User.builder()
-//                .username("employee")
-//                .password(passwordEncoder().encode("7777"))
-//                .roles("employee")
-//                .build();
-//
-//        UserDetails customer = User.builder()
-//                .username("customer")
-//                .password(passwordEncoder().encode("asdfghjkl"))
-//                .roles("customer")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(admin, manager, employee, customer);
-//    }
+    /*
+    @Bean
+    public UserDetailsService  userDetailsService() {
+        UserDetails admin = User.builder()
+                .username("admin")
+                .password(passwordEncoder().encode("admin"))
+                .roles("admin")
+                .build();
+
+        UserDetails student = User.builder()
+                .username("student")
+                .password(passwordEncoder().encode("password"))
+                .roles("student")
+                .build();
+
+        return new InMemoryUserDetailsManager(admin,student);
+    }
+     */
+
+}
