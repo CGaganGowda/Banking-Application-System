@@ -1,14 +1,14 @@
 package com.Bank.app.service;
 
-import com.Management.todo.dto.LoginDto;
-import com.Management.todo.dto.RoleDto;
-import com.Management.todo.dto.UserDto;
-import com.Management.todo.exception.TodoApiException;
-import com.Management.todo.model.Role;
-import com.Management.todo.model.User;
-import com.Management.todo.repo.RoleRepo;
-import com.Management.todo.repo.UserRepo;
-import com.Management.todo.security.JwtTokenProvider;
+import com.Bank.app.dto.LoginDto;
+import com.Bank.app.dto.RoleDto;
+import com.Bank.app.dto.UserDto;
+import com.Bank.app.exception.TodoApiException;
+import com.Bank.app.model.Role;
+import com.Bank.app.model.User;
+import com.Bank.app.repo.RoleRepo;
+import com.Bank.app.repo.UserRepo;
+import com.Bank.app.security.JwtTokenProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
