@@ -1,10 +1,10 @@
-package com.Management.todo.service;
+package com.Bank.app.service;
 
-import com.Management.todo.dto.LoginDto;
-import com.Management.todo.dto.RoleDto;
-import com.Management.todo.dto.UserDto;
-import com.Management.todo.model.Role;
-import com.Management.todo.model.User;
+import com.Bank.app.dto.LoginDto;
+import  com.Bank.app.dto.RoleDto;
+import  com.Bank.app.dto.UserDto;
+import  com.Bank.app.model.Role;
+import com.Bank.app.model.User;
 
 import java.util.Optional;
 
