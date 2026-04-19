@@ -2,10 +2,12 @@
 
 A production-style backend REST API for core banking operations — built with Spring Boot 4, Spring Security, JWT authentication, and PostgreSQL. Supports account management, fund transfers, and full transaction history.
 
-Spring Boot
-Java
-PostgreSQL
-Spring Security
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.1-6DB33F?style=flat&logo=springboot&logoColor=white)
+![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat&logo=openjdk&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white)
+![Spring Security](https://img.shields.io/badge/Spring%20Security-JWT-6DB33F?style=flat)
+
+---
 
 ## Features
 
@@ -17,6 +19,7 @@ Spring Security
 - Global exception handling with structured error responses
 - DTO mapping via ModelMapper
 
+---
 
 ## Tech stack
 
@@ -38,11 +41,9 @@ Spring Security
 Follows a standard 3-layer Spring Boot architecture:
 
 ```
-
 HTTP Request → Controller → Service → Repository → PostgreSQL
                    ↑
             JWT Security Filter
-
 ```
 
 - **Controller** — handles HTTP requests, validates input, delegates to service
@@ -174,4 +175,4 @@ src/main/java/com/Bank/app/
 
 ## Author
 
-**Gagan Gowda** — GitHub - https://github.com/CGaganGowda · LinkedIn - https://linkedin.com/in/gagan-c-gowda
+**Gagan Gowda** — [GitHub](https://github.com/CGaganGowda) · [LinkedIn](https://linkedin.com/in/your-profile)
