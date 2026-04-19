@@ -175,4 +175,4 @@ src/main/java/com/Bank/app/
 
 ## Author
 
-**Gagan Gowda** — [GitHub](https://github.com/CGaganGowda) · [LinkedIn](https://linkedin.com/in/your-profile)
+**Gagan Gowda** — [GitHub](https://github.com/CGaganGowda) · [LinkedIn](https://linkedin.com/in/gagan-c-gowda)
