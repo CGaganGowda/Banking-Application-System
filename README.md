@@ -6,6 +6,7 @@ A production-style backend REST API for core banking operations — built with S
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat&logo=openjdk&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white)
 ![Spring Security](https://img.shields.io/badge/Spring%20Security-JWT-6DB33F?style=flat)
+[![CI](https://github.com/CGaganGowda/Banking-Application-System/actions/workflows/ci.yml/badge.svg)](https://github.com/CGaganGowda/Banking-Application-System/actions/workflows/ci.yml)
 
 ---
 
