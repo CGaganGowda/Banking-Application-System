@@ -30,7 +30,6 @@ public class AuthServiceImpl implements AuthService {
     private UserRepo userRepo;
     private RoleRepo roleRepo;
     private PasswordEncoder encoder;
-    @Autowired
     private AuthenticationManager authenticationManager;
 
     private JwtTokenProvider jwtTokenProvider;
