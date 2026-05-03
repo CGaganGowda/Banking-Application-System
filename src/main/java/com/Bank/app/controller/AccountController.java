@@ -1,5 +1,6 @@
 package com.Bank.app.controller;
 
+import lombok.AllArgsConstructor;
 import com.Bank.app.dto.AccountDto;
 import com.Bank.app.dto.TransactionDto;
 import com.Bank.app.dto.TransferFundsDto;
