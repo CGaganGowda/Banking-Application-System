@@ -1,8 +1,19 @@
 package com.Bank.app.exception;
 
-import org.springframework.web.context.request.WebRequest;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-public record ErrorDetails(LocalDateTime time, String message, String details, String errorCode) {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ErrorDetails(){
+  private LocalDateTime time;
+  private String message;
+  private String details;
+  private String errorCode;
 }
