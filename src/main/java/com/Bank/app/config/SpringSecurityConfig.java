@@ -1,4 +1,4 @@
-package com.Bank.app.security;
+package com.Bank.app.config;
 
 import com.Bank.app.security.JwtAuthenticationEntryPoint;
 import com.Bank.app.security.JwtAuthenticationFilter;
