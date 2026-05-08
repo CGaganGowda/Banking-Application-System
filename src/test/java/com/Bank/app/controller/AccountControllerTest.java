@@ -22,7 +22,7 @@ class AccountControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private AccountService accountService;
 
     @Autowired
