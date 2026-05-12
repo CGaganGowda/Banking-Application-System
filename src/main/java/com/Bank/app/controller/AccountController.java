@@ -111,6 +111,7 @@ public class AccountController {
     @Operation(
             summary = "TRANSFER FUNDS",
             description = "Transfer funds between the valid source and destination customers."
+            )
     @ApiResponse(
             responseCode = "200",
             description = "Funds transferred successfully."
@@ -124,6 +125,7 @@ public class AccountController {
     @Operation(
             summary = "GET ALL TRANSACTIONS OF A CUSTOMER",
             description = "Provides all the transaction details for a customer with given ID."
+            )
     @ApiResponse(
             responseCode = "200",
             description = "Transactions shown successfully"
