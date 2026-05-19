@@ -1,10 +1,16 @@
 package com.Bank.app.service;
 
-import com.Bank.app.mapper.*;
-import com.Bank.app.exception.*;
-import com.Bank.app.dto.*;
-import com.Bank.app.model.*;
-import com.Bank.app.repo.*;
+import com.Bank.app.mapper.AccountMapper;
+import com.Bank.app.mapper.TransactionMapper;
+import com.Bank.app.exception.IdNotFoundException;
+import com.Bank.app.exception.InsufficientFundsException;
+import com.Bank.app.dto.AccountDto;
+import com.Bank.app.dto.TransactionDto;
+import com.Bank.app.dto.TransferFundsDto;
+import com.Bank.app.model.Account;
+import com.Bank.app.model.Transaction;
+import com.Bank.app.repo.AccountRepository;
+import com.Bank.app.repo.TransactionRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,10 +49,10 @@ class AccountServiceTest {
     @DisplayName("Create Account")
     @Test
     void createAccount_validInput_returnsAccountDto() {
-        AccountDto inputDto     = buildAccountDto(null, "Gagan", 5000.0);
-        Account    mapped       = buildAccount(null, "Gagan", 5000.0);
-        Account    saved        = buildAccount(1L, "Gagan", 5000.0);
-        AccountDto expectedDto  = buildAccountDto(1L, "Gagan", 5000.0);
+        AccountDto inputDto    = buildAccountDto(null, "Gagan", 5000.0);
+        Account    mapped      = buildAccount(null, "Gagan", 5000.0);
+        Account    saved       = buildAccount(1L, "Gagan", 5000.0);
+        AccountDto expectedDto = buildAccountDto(1L, "Gagan", 5000.0);
 
         when(accountMapper.toAccount(inputDto)).thenReturn(mapped);
         when(accountRepository.save(mapped)).thenReturn(saved);
@@ -100,7 +106,7 @@ class AccountServiceTest {
 
         assertThat(result.getBalance()).isEqualTo(5000.0);
         verify(accountRepository).save(account);
-        verify(transactionRepository).save(any(Transaction.class)); // ← transaction must be saved too
+        verify(transactionRepository).save(any(Transaction.class));
     }
 
     @Test
@@ -110,7 +116,7 @@ class AccountServiceTest {
         assertThrows(IdNotFoundException.class,
                 () -> accountService.deposit(99L, 4000.0));
 
-        verify(transactionRepository, never()).save(any()); // ← no transaction on failure
+        verify(transactionRepository, never()).save(any());
     }
 
     // ── withdraw ─────────────────────────────────────────────────
@@ -133,16 +139,16 @@ class AccountServiceTest {
     }
 
     @Test
-    void withdraw_insufficientFunds_throwsRuntimeException() {
+    void withdraw_insufficientFunds_throwsInsufficientFundsException() {  // ✅ renamed
         Account account = buildAccount(1L, "Gagan", 500.0);
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
 
-        assertThrows(RuntimeException.class,
+        assertThrows(InsufficientFundsException.class,   // ✅ specific exception
                 () -> accountService.withdraw(1L, 4000.0));
 
-        verify(accountRepository, never()).save(any());      // ← account not saved
-        verify(transactionRepository, never()).save(any());  // ← transaction not saved
+        verify(accountRepository, never()).save(any());
+        verify(transactionRepository, never()).save(any());
     }
 
     // ── getAllAccounts ────────────────────────────────────────────
@@ -201,8 +207,8 @@ class AccountServiceTest {
 
         accountService.transferFunds(dto);
 
-        assertThat(fromAcc.getBalance()).isEqualTo(3000.0);  // 5000 - 2000
-        assertThat(toAcc.getBalance()).isEqualTo(3000.0);    // 1000 + 2000
+        assertThat(fromAcc.getBalance()).isEqualTo(3000.0);
+        assertThat(toAcc.getBalance()).isEqualTo(3000.0);
         verify(accountRepository, times(2)).save(any(Account.class));
         verify(transactionRepository, times(2)).save(any(Transaction.class));
     }
@@ -229,7 +235,7 @@ class AccountServiceTest {
     void getAllTransactions_validAccountId_returnsTransactionDtoList() {
         Transaction    t1   = buildTransaction(1L, 1L, 5000.0, "DEPOSIT");
         Transaction    t2   = buildTransaction(2L, 1L, 2000.0, "WITHDRAW");
-        TransactionDto dto1 = new TransactionDto(1L, 1L, 5000.0, "DEPOSIT", LocalDateTime.now());
+        TransactionDto dto1 = new TransactionDto(1L, 1L, 5000.0, "DEPOSIT",  LocalDateTime.now());
         TransactionDto dto2 = new TransactionDto(2L, 1L, 2000.0, "WITHDRAW", LocalDateTime.now());
 
         when(transactionRepository.findByAccountIdOrderByTimestampDesc(1L))

@@ -37,7 +37,7 @@ class AccountControllerTest {
         mockMvc.perform(get("/api/accounts/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.accountHolderName").value("Gagan Gowda"))
+                .andExpect(jsonPath("$.name").value("Gagan Gowda"))  // ✅ fixed from $.accountHolderName
                 .andExpect(jsonPath("$.balance").value(5000.0));
     }
 

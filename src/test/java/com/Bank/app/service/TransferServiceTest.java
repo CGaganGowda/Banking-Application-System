@@ -39,13 +39,12 @@ class TransferServiceTest {
 
     @Test
     void transferFunds_validRequest_updatesBothAccounts() {
-        Account sender    = buildAccount(1L, "Gagan",  2000.0);
-        Account receiver  = buildAccount(2L, "Arjun",  500.0);
+        Account sender   = buildAccount(1L, "Gagan", 2000.0);
+        Account receiver = buildAccount(2L, "Arjun", 500.0);
 
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(sender));
         when(accountRepository.findById(2L)).thenReturn(Optional.of(receiver));
-        when(accountRepository.save(sender)).thenReturn(sender);
-        when(accountRepository.save(receiver)).thenReturn(receiver);
+        when(accountRepository.findById(1L)).thenReturn(Optional.of(sender));
+        when(accountRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
         accountService.transferFunds(new TransferFundsDto(1L, 2L, 1000.0));
 
@@ -59,19 +58,21 @@ class TransferServiceTest {
         Account sender   = buildAccount(1L, "Gagan", 100.0);
         Account receiver = buildAccount(2L, "Arjun", 500.0);
 
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(sender));
         when(accountRepository.findById(2L)).thenReturn(Optional.of(receiver));
+        when(accountRepository.findById(1L)).thenReturn(Optional.of(sender));
 
         assertThatThrownBy(() ->
                 accountService.transferFunds(new TransferFundsDto(1L, 2L, 800.0)))
                 .isInstanceOf(InsufficientFundsException.class);
 
-        // neither account should have been saved
         verify(accountRepository, never()).save(any());
     }
 
     @Test
-    void transferFunds_senderNotFound_throwsAccountNotFoundException() {
+    void transferFunds_senderNotFound_throwsIdNotFoundException() {
+        Account receiver = buildAccount(2L, "Arjun", 500.0);
+
+        when(accountRepository.findById(2L)).thenReturn(Optional.of(receiver));  // ✅ stub toAccountId first
         when(accountRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() ->
@@ -84,8 +85,8 @@ class TransferServiceTest {
         Account sender   = buildAccount(1L, "Gagan", 500.0);
         Account receiver = buildAccount(2L, "Arjun", 0.0);
 
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(sender));
         when(accountRepository.findById(2L)).thenReturn(Optional.of(receiver));
+        when(accountRepository.findById(1L)).thenReturn(Optional.of(sender));
         when(accountRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
         accountService.transferFunds(new TransferFundsDto(1L, 2L, 500.0));
