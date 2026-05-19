@@ -1,4 +1,16 @@
 package com.Bank.app.dto;
 
-public record TransferFundsDto(Long fromAccountID, Long toAccountID, double amount) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class TransferFundsDto{
+    private Long fromAccountId;
+    private Long toAccountId;
+    private double amount;
 }

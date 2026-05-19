@@ -1,10 +1,13 @@
 package com.Bank.app.service;
 
-import com.Bank.app.dto.TransferRequestDto;
-import com.Bank.app.entity.Account;
-import com.Bank.app.exception.AccountNotFoundException;
-import com.Bank.app.exception.InsufficientBalanceException;
-import com.Bank.app.repository.AccountRepository;
+import com.Bank.app.dto.TransferFundsDto;
+import com.Bank.app.exception.IdNotFoundException;
+import com.Bank.app.exception.InsufficientFundsException;
+import com.Bank.app.mapper.AccountMapper;
+import com.Bank.app.mapper.TransactionMapper;
+import com.Bank.app.model.Account;
+import com.Bank.app.repo.AccountRepository;
+import com.Bank.app.repo.TransactionRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,6 +25,15 @@ class TransferServiceTest {
     @Mock
     private AccountRepository accountRepository;
 
+    @Mock
+    private TransactionRepository transactionRepository;
+
+    @Mock
+    private TransactionMapper transactionMapper;
+
+    @Mock
+    private AccountMapper accountMapper;
+
     @InjectMocks
     private AccountServiceImpl accountService;
 
@@ -35,7 +47,7 @@ class TransferServiceTest {
         when(accountRepository.save(sender)).thenReturn(sender);
         when(accountRepository.save(receiver)).thenReturn(receiver);
 
-        accountService.transferFunds(new TransferRequestDto(1L, 2L, 1000.0));
+        accountService.transferFunds(new TransferFundsDto(1L, 2L, 1000.0));
 
         assertThat(sender.getBalance()).isEqualTo(1000.0);
         assertThat(receiver.getBalance()).isEqualTo(1500.0);
@@ -51,8 +63,8 @@ class TransferServiceTest {
         when(accountRepository.findById(2L)).thenReturn(Optional.of(receiver));
 
         assertThatThrownBy(() ->
-                accountService.transferFunds(new TransferRequestDto(1L, 2L, 800.0)))
-                .isInstanceOf(InsufficientBalanceException.class);
+                accountService.transferFunds(new TransferFundsDto(1L, 2L, 800.0)))
+                .isInstanceOf(InsufficientFundsException.class);
 
         // neither account should have been saved
         verify(accountRepository, never()).save(any());
@@ -63,8 +75,8 @@ class TransferServiceTest {
         when(accountRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() ->
-                accountService.transferFunds(new TransferRequestDto(99L, 2L, 500.0)))
-                .isInstanceOf(AccountNotFoundException.class);
+                accountService.transferFunds(new TransferFundsDto(99L, 2L, 500.0)))
+                .isInstanceOf(IdNotFoundException.class);
     }
 
     @Test
@@ -76,7 +88,7 @@ class TransferServiceTest {
         when(accountRepository.findById(2L)).thenReturn(Optional.of(receiver));
         when(accountRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
-        accountService.transferFunds(new TransferRequestDto(1L, 2L, 500.0));
+        accountService.transferFunds(new TransferFundsDto(1L, 2L, 500.0));
 
         assertThat(sender.getBalance()).isEqualTo(0.0);
         assertThat(receiver.getBalance()).isEqualTo(500.0);
@@ -85,7 +97,7 @@ class TransferServiceTest {
     private Account buildAccount(Long id, String name, double balance) {
         Account a = new Account();
         a.setId(id);
-        a.setAccountHolderName(name);
+        a.setName(name);
         a.setBalance(balance);
         return a;
     }

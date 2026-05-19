@@ -1,20 +1,12 @@
 package com.Bank.app.service;
 
 
-import com.Bank.app.dto.AccountDto;
-import com.Bank.app.dto.TransactionDto;
-import com.Bank.app.dto.TransferFundsDto;
-import com.Bank.app.exception.IdNotFoundException;
-import com.Bank.app.exception.InsufficientFundsException;
-import com.Bank.app.mapper.AccountMapper;
-import com.Bank.app.mapper.TransactionMapper;
-import com.Bank.app.model.Account;
-import com.Bank.app.model.Transaction;
-import com.Bank.app.repo.AccountRepository;
-import com.Bank.app.repo.TransactionRepository;
+import com.Bank.app.mapper.*;
+import com.Bank.app.exception.*;
+import com.Bank.app.dto.*;
+import com.Bank.app.model.*;
+import com.Bank.app.repo.*;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,12 +14,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@NoArgsConstructor
+
 @AllArgsConstructor
 @Service
 public class AccountServiceImpl implements AccountService {
 
-  
+
     private AccountMapper accountMapper;
     private AccountRepository accountRepository;
     private TransactionRepository transactionRepository;
@@ -83,7 +75,7 @@ public class AccountServiceImpl implements AccountService {
         );
 
         if(amount > account.getBalance()){
-            throw new RuntimeException("Insufficient funds");
+            throw new InsufficientFundsException("Insufficient funds");
         }
 
         double total = account.getBalance() - amount;
@@ -121,34 +113,34 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void transferFunds(TransferFundsDto transferFundsDto) {
         Account toAcc = accountRepository.findById(
-                transferFundsDto.toAccountID()).orElseThrow(
-                () -> new IdNotFoundException("Account with id: " +transferFundsDto.toAccountID()+ " not found"));
+                transferFundsDto.getToAccountId()).orElseThrow(
+                () -> new IdNotFoundException("Account with id: " +transferFundsDto.getToAccountId()+ " not found"));
         Account froAcc = accountRepository.findById(
-                transferFundsDto.fromAccountID()).orElseThrow(
-                () -> new IdNotFoundException("Account with id: " +transferFundsDto.fromAccountID()+ " not found"));
+                transferFundsDto.getFromAccountId()).orElseThrow(
+                () -> new IdNotFoundException("Account with id: " +transferFundsDto.getFromAccountId()+ " not found"));
 
-        if(froAcc.getBalance() < transferFundsDto.amount()){
+        if(froAcc.getBalance() < transferFundsDto.getAmount()){
             throw new InsufficientFundsException("Insufficient funds");
         }
-        froAcc.setBalance(froAcc.getBalance()-transferFundsDto.amount());
-        toAcc.setBalance(toAcc.getBalance()+transferFundsDto.amount());
+        froAcc.setBalance(froAcc.getBalance()-transferFundsDto.getAmount());
+        toAcc.setBalance(toAcc.getBalance()+transferFundsDto.getAmount());
 
         accountRepository.save(toAcc);
         accountRepository.save(froAcc);
 
         Transaction DepoTransaction = new Transaction();
         DepoTransaction.setAccountId(froAcc.getId());
-        DepoTransaction.setAmount(transferFundsDto.amount());
+        DepoTransaction.setAmount(transferFundsDto.getAmount());
         DepoTransaction.setTimestamp(LocalDateTime.now());
-        DepoTransaction.setTransactionType(TRANSACTION_TYPE_DEPOSIT);
+        DepoTransaction.setTransactionType(TRANSACTION_TYPE_WITHDRAW);
 
         transactionRepository.save(DepoTransaction);
 
         Transaction WithTransaction = new Transaction();
         WithTransaction.setAccountId(toAcc.getId());
-        WithTransaction.setAmount(transferFundsDto.amount());
+        WithTransaction.setAmount(transferFundsDto.getAmount());
         WithTransaction.setTimestamp(LocalDateTime.now());
-        WithTransaction.setTransactionType(TRANSACTION_TYPE_WITHDRAW);
+        WithTransaction.setTransactionType(TRANSACTION_TYPE_DEPOSIT);
 
         transactionRepository.save(WithTransaction);
     }

@@ -1,7 +1,7 @@
 package com.Bank.app.dto;
 
 
-import com.Management.todo.model.Role;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

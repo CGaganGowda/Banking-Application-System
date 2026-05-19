@@ -8,11 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class AccountMapper {
 
-    private Long id;
-    private String name;
-    private double balance;
-
-
     public AccountDto toAccountDto(Account account) {
         AccountDto  accountDto = new AccountDto(
                 account.getId(),
@@ -24,9 +19,9 @@ public class AccountMapper {
 
     public Account toAccount(AccountDto accountDto) {
         Account account = new Account(
-                accountDto.id(),
-                accountDto.name(),
-                accountDto.balance()
+                accountDto.getId(),
+                accountDto.getName(),
+                accountDto.getBalance()
         );
         return account;
     }

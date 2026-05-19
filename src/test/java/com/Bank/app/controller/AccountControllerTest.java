@@ -1,15 +1,15 @@
 package com.Bank.app.controller;
 
 import com.Bank.app.dto.AccountDto;
-import com.Bank.app.exception.AccountNotFoundException;
+import com.Bank.app.exception.IdNotFoundException;
 import com.Bank.app.service.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.*;
@@ -45,7 +45,7 @@ class AccountControllerTest {
     @WithMockUser
     void getAccountById_nonExistingAccount_returns404() throws Exception {
         when(accountService.getAccountById(99L))
-                .thenThrow(new AccountNotFoundException("Account not found with id: 99"));
+                .thenThrow(new IdNotFoundException("Account not found with id: 99"));
 
         mockMvc.perform(get("/api/accounts/99"))
                 .andExpect(status().isNotFound());

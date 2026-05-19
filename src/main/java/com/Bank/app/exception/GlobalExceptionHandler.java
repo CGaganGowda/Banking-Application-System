@@ -46,7 +46,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
     
     @ExceptionHandler(value = TodoApiException.class)
-    public ResponseEntity<ErrorDetails> handleTodoApiException(APIException exception, WebRequest request){
+    public ResponseEntity<ErrorDetails> handleTodoApiException(TodoApiException exception, WebRequest request){
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
                 exception.getMessage(),
