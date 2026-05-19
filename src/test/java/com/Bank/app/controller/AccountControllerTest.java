@@ -1,6 +1,7 @@
 package com.Bank.app.controller;
 
 import com.Bank.app.dto.AccountDto;
+import com.Bank.app.exception.GlobalExceptionHandler;
 import com.Bank.app.exception.IdNotFoundException;
 import com.Bank.app.security.JwtAuthenticationEntryPoint;
 import com.Bank.app.security.JwtAuthenticationFilter;
@@ -9,16 +10,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AccountController.class)
+@Import(GlobalExceptionHandler.class)   // ✅ load exception handler so 404 works
 class AccountControllerTest {
 
     @Autowired
@@ -67,6 +71,7 @@ class AccountControllerTest {
         when(accountService.createAccount(any())).thenReturn(saved);
 
         mockMvc.perform(post("/api/accounts")
+                        .with(csrf())               // ✅ include CSRF token for POST
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -80,6 +85,7 @@ class AccountControllerTest {
         when(accountService.deposit(1L, 500.0)).thenReturn(updated);
 
         mockMvc.perform(put("/api/accounts/1/deposit")
+                        .with(csrf())               // ✅ include CSRF token for PUT
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"amount\": 500.0}"))
                 .andExpect(status().isOk())
