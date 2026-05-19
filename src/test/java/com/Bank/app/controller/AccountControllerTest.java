@@ -6,9 +6,9 @@ import com.Bank.app.service.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -16,7 +16,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(AccountController.class)
+
+@WebMvcTest(value = AccountController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 class AccountControllerTest {
 
     @Autowired
@@ -29,7 +30,6 @@ class AccountControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @WithMockUser
     void getAccountById_existingAccount_returns200WithDto() throws Exception {
         AccountDto dto = new AccountDto(1L, "Gagan Gowda", 5000.0);
         when(accountService.getAccountById(1L)).thenReturn(dto);
@@ -37,12 +37,11 @@ class AccountControllerTest {
         mockMvc.perform(get("/api/accounts/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("Gagan Gowda"))  // ✅ fixed from $.accountHolderName
+                .andExpect(jsonPath("$.name").value("Gagan Gowda"))
                 .andExpect(jsonPath("$.balance").value(5000.0));
     }
 
     @Test
-    @WithMockUser
     void getAccountById_nonExistingAccount_returns404() throws Exception {
         when(accountService.getAccountById(99L))
                 .thenThrow(new IdNotFoundException("Account not found with id: 99"));
@@ -52,7 +51,6 @@ class AccountControllerTest {
     }
 
     @Test
-    @WithMockUser
     void createAccount_validBody_returns201() throws Exception {
         AccountDto request = new AccountDto(null, "Gagan Gowda", 1000.0);
         AccountDto saved   = new AccountDto(1L,   "Gagan Gowda", 1000.0);
@@ -66,7 +64,6 @@ class AccountControllerTest {
     }
 
     @Test
-    @WithMockUser
     void deposit_validAmount_returns200WithUpdatedBalance() throws Exception {
         AccountDto updated = new AccountDto(1L, "Gagan Gowda", 1500.0);
         when(accountService.deposit(1L, 500.0)).thenReturn(updated);
