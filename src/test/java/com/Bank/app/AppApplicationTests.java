@@ -1,10 +1,9 @@
 package com.Bank.app;
 
-import com.Bank.app.security.JwtAuthenticationEntryPoint;
-import com.Bank.app.security.JwtAuthenticationFilter;
+import com.Bank.app.config.TestSecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.context.annotation.Import;
 
 @SpringBootTest(
 		webEnvironment = SpringBootTest.WebEnvironment.NONE,
@@ -12,16 +11,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 				"spring.autoconfigure.exclude=" +
 						"org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration," +
 						"org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration," +
-						"org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration"
+						"org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration," +
+						"org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration," +
+						"org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration"
 		}
 )
+@Import(TestSecurityConfig.class)
 class AppApplicationTests {
-
-	@MockitoBean
-	private JwtAuthenticationFilter jwtAuthenticationFilter;
-
-	@MockitoBean
-	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
 	@Test
 	void contextLoads() {
