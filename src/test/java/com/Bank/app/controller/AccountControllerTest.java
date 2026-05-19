@@ -3,6 +3,7 @@ package com.Bank.app.controller;
 import com.Bank.app.dto.AccountDto;
 import com.Bank.app.exception.GlobalExceptionHandler;
 import com.Bank.app.exception.IdNotFoundException;
+import com.Bank.app.security.CustomUserDetailsService;
 import com.Bank.app.security.JwtAuthenticationEntryPoint;
 import com.Bank.app.security.JwtAuthenticationFilter;
 import com.Bank.app.service.AccountService;
@@ -37,6 +38,9 @@ class AccountControllerTest {
 
     @MockitoBean
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    @MockitoBean
+    private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private ObjectMapper objectMapper;
