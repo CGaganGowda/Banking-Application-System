@@ -53,6 +53,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false),
                 "INTERNAL_SERVER_ERROR"
         );
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

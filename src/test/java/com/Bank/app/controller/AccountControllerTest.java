@@ -1,5 +1,6 @@
 package com.Bank.app.controller;
 
+import com.Bank.app.config.SpringSecurityConfig;
 import com.Bank.app.dto.AccountDto;
 import com.Bank.app.exception.GlobalExceptionHandler;
 import com.Bank.app.exception.IdNotFoundException;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AccountController.class)
-@Import(GlobalExceptionHandler.class)
+@Import({SpringSecurityConfig.class, GlobalExceptionHandler.class})
 class AccountControllerTest {
 
     @Autowired
