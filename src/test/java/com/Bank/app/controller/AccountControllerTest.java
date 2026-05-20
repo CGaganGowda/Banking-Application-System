@@ -1,5 +1,6 @@
 package com.Bank.app.controller;
 
+import jakarta.servlet.FilterChain;
 import com.Bank.app.config.SpringSecurityConfig;
 import com.Bank.app.dto.AccountDto;
 import com.Bank.app.exception.GlobalExceptionHandler;
@@ -9,6 +10,9 @@ import com.Bank.app.security.JwtAuthenticationEntryPoint;
 import com.Bank.app.security.JwtAuthenticationFilter;
 import com.Bank.app.service.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -45,6 +49,23 @@ class AccountControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @BeforeEach
+    void setUp() throws Exception {
+
+        doAnswer(invocation -> {
+
+            var request = invocation.getArgument(0);
+            var response = invocation.getArgument(1);
+            var chain = invocation.getArgument(2, FilterChain.class);
+
+            chain.doFilter((ServletRequest) request, (ServletResponse) response);
+
+            return null;
+
+        }).when(jwtAuthenticationFilter)
+                .doFilter(any(), any(), any());
+    }
 
     @Test
     @WithMockUser
