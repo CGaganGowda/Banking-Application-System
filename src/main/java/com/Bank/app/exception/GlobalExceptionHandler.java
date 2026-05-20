@@ -23,17 +23,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDetails> handleGenericException(Exception exception, WebRequest request){
-        ErrorDetails errorDetails = new ErrorDetails(
-                LocalDateTime.now(),
-                exception.getMessage(),
-                request.getDescription(false),
-                "INTERNAL_SERVER_ERROR"
-        );
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(InsufficientFundsException.class)
     public ResponseEntity<ErrorDetails> handle(InsufficientFundsException exception, WebRequest request){
         ErrorDetails errorDetails = new ErrorDetails(
@@ -52,6 +41,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 exception.getMessage(),
                 request.getDescription(false),
                 "API_EXCEPTION"
+        );
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorDetails> handleGenericException(Exception exception, WebRequest request){
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                request.getDescription(false),
+                "INTERNAL_SERVER_ERROR"
         );
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }

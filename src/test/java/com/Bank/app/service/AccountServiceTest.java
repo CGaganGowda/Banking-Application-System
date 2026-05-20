@@ -139,12 +139,12 @@ class AccountServiceTest {
     }
 
     @Test
-    void withdraw_insufficientFunds_throwsInsufficientFundsException() {  // ✅ renamed
+    void withdraw_insufficientFunds_throwsInsufficientFundsException() {
         Account account = buildAccount(1L, "Gagan", 500.0);
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
 
-        assertThrows(InsufficientFundsException.class,   // ✅ specific exception
+        assertThrows(InsufficientFundsException.class,
                 () -> accountService.withdraw(1L, 4000.0));
 
         verify(accountRepository, never()).save(any());

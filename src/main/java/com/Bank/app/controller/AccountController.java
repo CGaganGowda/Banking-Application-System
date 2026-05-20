@@ -22,7 +22,7 @@ import java.util.Map;
 )
 @RestController
 @AllArgsConstructor
-@RequestMapping("api/accounts")
+@RequestMapping("/api/accounts")
 public class AccountController {
 
     private AccountService accountService;
