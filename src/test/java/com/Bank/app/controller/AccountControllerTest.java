@@ -12,8 +12,7 @@ import com.Bank.app.service.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -27,6 +26,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @WebMvcTest(AccountController.class)
 @Import({SpringSecurityConfig.class, GlobalExceptionHandler.class})
 class AccountControllerTest {
@@ -67,6 +67,7 @@ class AccountControllerTest {
                 .doFilter(any(), any(), any());
     }
 
+    @Order(1)
     @Test
     @WithMockUser
     void getAccountById_existingAccount_returns200WithDto() throws Exception {
@@ -80,6 +81,7 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.balance").value(5000.0));
     }
 
+    @Order(2)
     @Test
     @WithMockUser
     void getAccountById_nonExistingAccount_returns404() throws Exception {
@@ -90,6 +92,7 @@ class AccountControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Order(3)
     @Test
     @WithMockUser
     void createAccount_validBody_returns201() throws Exception {
@@ -105,6 +108,7 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.id").value(1));
     }
 
+    @Order(4)
     @Test
     @WithMockUser
     void deposit_validAmount_returns200WithUpdatedBalance() throws Exception {
