@@ -157,7 +157,6 @@ The application starts on `http://localhost:8080`
 - [ ] Add pagination to transaction history
 - [ ] Implement account types (Savings, Current)
 - [ ] Add Swagger / OpenAPI documentation
-- [ ] Write unit and integration tests
 - [ ] Dockerize the application
 
 ---
