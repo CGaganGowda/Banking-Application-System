@@ -1,95 +1,109 @@
-# Banking Application System
+<div align="center">
 
-A production-style backend REST API for core banking operations — built with Spring Boot 4, Spring Security, JWT authentication, and PostgreSQL. Supports account management, fund transfers, and full transaction history.
+# 🏦 Banking Application System
 
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.1-6DB33F?style=flat&logo=springboot&logoColor=white)
-![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat&logo=openjdk&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white)
-![Spring Security](https://img.shields.io/badge/Spring%20Security-JWT-6DB33F?style=flat)
-[![CI](https://github.com/CGaganGowda/Banking-Application-System/actions/workflows/ci.yml/badge.svg)](https://github.com/CGaganGowda/Banking-Application-System/actions/workflows/ci.yml)
+### A secure, production-ready RESTful Banking Backend
 
----
+[![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/projects/jdk/21/)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.0.1-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![JWT](https://img.shields.io/badge/JWT-Secured-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
+[![Maven](https://img.shields.io/badge/Maven-Build-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)](https://maven.apache.org/)
 
-## Features
-
-- Create, retrieve, update, and delete bank accounts
-- Deposit and withdraw funds with balance validation
-- Fund transfers between two accounts (atomic)
-- Full transaction history per account
-- JWT-based authentication with Spring Security
-- Global exception handling with structured error responses
-- DTO mapping via ModelMapper
+</div>
 
 ---
 
-## Tech stack
+## 📌 Overview
+
+The **Banking Application System** is a fully-functional backend REST API that simulates core banking operations. Built with **Spring Boot 3.x** and **Java 21**, it demonstrates clean architecture, JWT-secured endpoints, transactional fund management, and production-grade exception handling — all backed by a **PostgreSQL** relational database.
+
+This project showcases backend engineering skills directly relevant to fintech and enterprise application development.
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---|---|
+| **Account Management** | Create, retrieve, and delete bank accounts |
+| **Deposits & Withdrawals** | Credit and debit operations with balance checks |
+| **Fund Transfers** | Atomic transfers between two accounts via REST |
+| **Transaction History** | Full audit trail of all account transactions |
+| **JWT Authentication** | Stateless, token-based security for all endpoints |
+| **Global Exception Handling** | Consistent error responses using `@ControllerAdvice` |
+| **DTO Pattern** | Clean separation between API contracts and domain models via ModelMapper |
+
+---
+
+## 🛠️ Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Framework | Spring Boot 4.0.1 |
 | Language | Java 21 |
-| Security | Spring Security + jjwt 0.13.0 |
-| Persistence | Spring Data JPA + Hibernate |
+| Framework | Spring Boot 3.0.1 |
+| Security | Spring Security + JWT (jjwt 0.13.0) |
+| Persistence | Spring Data JPA / Hibernate |
 | Database | PostgreSQL |
-| Mapping | ModelMapper 3.1.1 |
-| Boilerplate | Lombok 1.18.38 |
-| Build | Maven |
+| Build Tool | Maven |
+| Utilities | Lombok, ModelMapper 3.1.1 |
 
 ---
 
-## Architecture
-
-Follows a standard 3-layer Spring Boot architecture:
+## 📁 Project Structure
 
 ```
-HTTP Request → Controller → Service → Repository → PostgreSQL
-                   ↑
-            JWT Security Filter
+Banking-Application-System/
+├── src/
+│   └── main/
+│       ├── java/com/Bank/app/
+│       │   ├── controller/       # REST controllers (Account, Transaction)
+│       │   ├── service/          # Business logic layer
+│       │   ├── repository/       # JPA repositories
+│       │   ├── entity/           # JPA entities (Account, Transaction)
+│       │   ├── dto/              # Data Transfer Objects
+│       │   ├── security/         # JWT filter, UserDetails, SecurityConfig
+│       │   └── exception/        # Custom exceptions & global handler
+│       └── resources/
+│           └── application.properties
+├── pom.xml
+└── README.md
 ```
 
-- **Controller** — handles HTTP requests, validates input, delegates to service
-- **Service** — business logic, DTO ↔ entity mapping via ModelMapper
-- **Repository** — Spring Data JPA interfaces for DB access
-- **Security** — JWT filter chain sits in front of all protected endpoints
-- **Exception handling** — global `@ControllerAdvice` returns structured JSON errors
+---
+
+## 🔌 API Endpoints
+
+### Account Operations
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/accounts` | Create a new bank account |
+| `GET` | `/api/accounts/{id}` | Get account details by ID |
+| `GET` | `/api/accounts` | List all accounts |
+| `DELETE` | `/api/accounts/{id}` | Delete an account |
+
+### Transaction Operations
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `PUT` | `/api/accounts/{id}/deposit` | Deposit amount to account |
+| `PUT` | `/api/accounts/{id}/withdraw` | Withdraw amount from account |
+| `POST` | `/api/accounts/transfer` | Transfer funds between accounts |
+| `GET` | `/api/accounts/{id}/transactions` | Get full transaction history |
+
+### Auth
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/auth/register` | Register a new user |
+| `POST` | `/api/auth/login` | Authenticate and receive JWT token |
+
+> All endpoints (except `/api/auth/**`) require a valid JWT token in the `Authorization: Bearer <token>` header.
 
 ---
 
-## API endpoints
-
-### Account endpoints
-
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| `POST` | `/api/accounts` | Create a new account | Required |
-| `GET` | `/api/accounts/{id}` | Get account by ID | Required |
-| `GET` | `/api/accounts` | List all accounts | Required |
-| `PUT` | `/api/accounts/{id}/deposit` | Deposit amount | Required |
-| `PUT` | `/api/accounts/{id}/withdraw` | Withdraw amount | Required |
-| `DELETE` | `/api/accounts/{id}` | Delete account | Required |
-
-### Transfer endpoints
-
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| `POST` | `/api/accounts/transfer` | Transfer funds between accounts | Required |
-
-### Transaction endpoints
-
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| `GET` | `/api/accounts/{id}/transactions` | Get all transactions for an account | Required |
-
-### Auth endpoints
-
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| `POST` | `/api/auth/register` | Register a new user | Public |
-| `POST` | `/api/auth/login` | Login and receive JWT token | Public |
-
----
-
-## Local setup
+## ⚙️ Getting Started
 
 ### Prerequisites
 
@@ -97,83 +111,65 @@ HTTP Request → Controller → Service → Repository → PostgreSQL
 - Maven 3.8+
 - PostgreSQL 14+
 
-### 1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/CGaganGowda/Banking-Application-System.git
 cd Banking-Application-System
 ```
 
-### 2. Create the database
+### 2. Configure the Database
 
-```sql
-psql -U postgres
-CREATE DATABASE banking_db;
-```
-
-### 3. Configure application.properties
-
-In `src/main/resources/application.properties`:
+Update `src/main/resources/application.properties`:
 
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/banking_db
-spring.datasource.username=your_postgres_username
-spring.datasource.password=your_postgres_password
+spring.datasource.url=jdbc:postgresql://localhost:5432/bankdb
+spring.datasource.username=postgres
+spring.datasource.password=9999
 spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-app.jwt.secret=your_jwt_secret_key_here
+
+app.jwt.secret=your_jwt_secret_key
 app.jwt.expiration=86400000
 ```
 
-### 4. Build and run
+### 3. Build & Run
 
 ```bash
 ./mvnw clean install
 ./mvnw spring-boot:run
 ```
 
-The API will be available at `http://localhost:8080`
-
-### 5. Test with Postman
-
-1. Register: `POST /api/auth/register` with `{ "username": "...", "password": "..." }`
-2. Login: `POST /api/auth/login` — copy the JWT token from the response
-3. Add `Authorization: Bearer ` header to all subsequent requests
+The application starts on `http://localhost:8080`
 
 ---
 
-## Exception handling
+## 🔐 Security
 
-All errors return a consistent JSON response:
-
-```json
-{
-  "status": 404,
-  "error": "Account Not Found",
-  "message": "Account with id 5 does not exist",
-  "timestamp": "2024-01-15T10:30:00"
-}
-```
-
-Custom exceptions: `AccountNotFoundException`, `InsufficientBalanceException`, handled by a global `@ControllerAdvice`.
+- All APIs are secured with **JWT (JSON Web Token)** authentication
+- Passwords are encrypted using **BCrypt**
+- `AccountNotFoundException` and `InsufficientFundsException` return structured error bodies
+- A global `@ControllerAdvice` ensures consistent error handling across all endpoints
 
 ---
 
-## Project structure
+## 🗺️ Roadmap
 
-```
-src/main/java/com/Bank/app/
-├── controller/       # REST controllers
-├── service/          # Business logic interfaces + implementations
-├── repository/       # Spring Data JPA repositories
-├── entity/           # JPA entities (Account, Transaction)
-├── dto/              # Request/Response DTOs
-├── security/         # JWT filter, UserDetailsService, SecurityConfig
-└── exception/        # Custom exceptions + GlobalExceptionHandler
-```
+- [ ] Add pagination to transaction history
+- [ ] Implement account types (Savings, Current)
+- [ ] Add Swagger / OpenAPI documentation
+- [ ] Write unit and integration tests
+- [ ] Dockerize the application
 
 ---
 
-## Author
+## 👤 Author
 
-**Gagan Gowda** — [GitHub](https://github.com/CGaganGowda) · [LinkedIn](https://linkedin.com/in/gagan-c-gowda)
+**Gagan Gowda**
+[![GitHub](https://img.shields.io/badge/GitHub-CGaganGowda-181717?style=flat-square&logo=github)](https://github.com/CGaganGowda)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/gagan-c-gowda/)
+
+---
+
+<div align="center">
+⭐ If you find this project useful, consider giving it a star!
+</div>
