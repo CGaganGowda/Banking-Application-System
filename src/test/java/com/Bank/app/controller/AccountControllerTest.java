@@ -37,7 +37,6 @@ class AccountControllerTest {
     @MockitoBean
     private AccountService accountService;
 
-
     @MockitoBean
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
