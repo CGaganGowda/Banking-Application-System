@@ -1,6 +1,7 @@
 package com.Bank.app.service;
 
 import com.Bank.app.dto.LoginDto;
+import com.Bank.app.dto.RegisterDto;
 import com.Bank.app.dto.RoleDto;
 import com.Bank.app.dto.UserDto;
 import com.Bank.app.exception.TodoApiException;
@@ -10,6 +11,7 @@ import com.Bank.app.repo.RoleRepo;
 import com.Bank.app.repo.UserRepo;
 import com.Bank.app.security.JwtTokenProvider;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +27,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+    private ModelMapper modelMapper;
     private UserRepo userRepo;
     private RoleRepo roleRepo;
     private PasswordEncoder encoder;
@@ -33,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
     private JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public User register(UserDto userDto) {
+    public RegisterDto register(UserDto userDto) {
 
 
         if(userRepo.existsByUsername(userDto.getUsername())){
@@ -56,7 +59,8 @@ public class AuthServiceImpl implements AuthService {
         user.setRoles(roles);
 
         User savedUser = userRepo.save(user);
-        return savedUser;
+        RegisterDto registerDto = modelMapper.map(savedUser, RegisterDto.class);
+        return registerDto;
     }
 
     /*

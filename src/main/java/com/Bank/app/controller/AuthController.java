@@ -2,8 +2,8 @@ package com.Bank.app.controller;
 
 import com.Bank.app.dto.JwtAuthResponse;
 import com.Bank.app.dto.LoginDto;
+import com.Bank.app.dto.RegisterDto;
 import com.Bank.app.dto.UserDto;
-import com.Bank.app.model.User;
 import com.Bank.app.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,9 +21,9 @@ public class AuthController {
     public AuthService authService;
 
     @PostMapping("register")
-    public ResponseEntity<User> registerUser(@RequestBody UserDto userDto){
-        User user = authService.register(userDto);
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+    public ResponseEntity<RegisterDto> registerUser(@RequestBody UserDto userDto){
+        RegisterDto register = authService.register(userDto);
+        return new ResponseEntity<>(register, HttpStatus.CREATED);
     }
 
     @PostMapping("login")
