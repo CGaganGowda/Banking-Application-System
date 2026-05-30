@@ -9,21 +9,19 @@ import org.springframework.stereotype.Component;
 public class AccountMapper {
 
     public AccountDto toAccountDto(Account account) {
-        AccountDto  accountDto = new AccountDto(
+        return new AccountDto(
                 account.getId(),
                 account.getName(),
                 account.getBalance()
         );
-        return accountDto;
     }
 
     public Account toAccount(AccountDto accountDto) {
-        Account account = new Account(
+        return new Account(
                 accountDto.getId(),
                 accountDto.getName(),
                 accountDto.getBalance()
         );
-        return account;
     }
 
 

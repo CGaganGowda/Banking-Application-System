@@ -1,6 +1,7 @@
 package com.Bank.app.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -54,17 +55,17 @@ public class JwtTokenProvider {
 
     //Validate Token
 
-    public Boolean validateToken(String token){
-        try{
-                Jwts.parser()
-                .verifyWith((SecretKey) keys())
-                .build()
-                .parse(token);
-                return true;
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser()
+                    .verifyWith((SecretKey) keys())
+                    .build()
+                    .parseSignedClaims(token);
+
+            return true;
+
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
         }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        return false;
     }
 }

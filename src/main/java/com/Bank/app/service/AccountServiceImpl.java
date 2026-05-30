@@ -8,7 +8,9 @@ import com.Bank.app.model.*;
 import com.Bank.app.repo.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,9 +30,6 @@ public class AccountServiceImpl implements AccountService {
     private static final String TRANSACTION_TYPE_DEPOSIT = "DEPOSIT";
     private static final String TRANSACTION_TYPE_WITHDRAW = "WITHDRAW";
 
-//    public AccountServiceImpl(AccountMapper accountMapper) {
-//        this.accountMapper = accountMapper;
-//    }
 
     //Create an Account
     @Override
@@ -49,11 +48,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto deposit(Long id, double amount) {
+    public AccountDto deposit(Long id, BigDecimal amount) {
         Account account = accountRepository.findById(id).orElseThrow(
                 () -> new IdNotFoundException("Account with id: " + id + " not found")
         );
-        double total = account.getBalance() + amount;
+        BigDecimal total = account.getBalance().add(amount);
         account.setBalance(total);
         Account savedAccount = accountRepository.save(account);
 
@@ -69,16 +68,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto withdraw(Long id, double amount) {
+    public AccountDto withdraw(Long id, BigDecimal amount) {
         Account account = accountRepository.findById(id).orElseThrow(
                 () -> new IdNotFoundException("Account with id: " + id + " not found")
         );
 
-        if(amount > account.getBalance()){
+        if(amount.compareTo(account.getBalance())>0){
             throw new InsufficientFundsException("Insufficient funds");
         }
 
-        double total = account.getBalance() - amount;
+        BigDecimal total = account.getBalance().subtract(amount);
         account.setBalance(total);
         Account savedAccount = accountRepository.save(account);
 
@@ -110,50 +109,61 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.delete(account);
     }
 
+    @Transactional
     @Override
     public void transferFunds(TransferFundsDto transferFundsDto) {
-        Account toAcc = accountRepository.findById(
+
+        LocalDateTime timestamp = LocalDateTime.now();
+
+        if(transferFundsDto.getToAccountId().equals(transferFundsDto.getFromAccountId())){
+            throw new IllegalArgumentException("Source and Destination accounts should not be same");
+        }
+
+        if(transferFundsDto.getAmount().compareTo(BigDecimal.ZERO)<=0){
+            throw new IllegalArgumentException("Amount must be greater than zero");
+        }
+
+
+        Account toAccount = accountRepository.findById(
                 transferFundsDto.getToAccountId()).orElseThrow(
                 () -> new IdNotFoundException("Account with id: " +transferFundsDto.getToAccountId()+ " not found"));
-        Account froAcc = accountRepository.findById(
+        Account fromAccount = accountRepository.findById(
                 transferFundsDto.getFromAccountId()).orElseThrow(
                 () -> new IdNotFoundException("Account with id: " +transferFundsDto.getFromAccountId()+ " not found"));
 
-        if(froAcc.getBalance() < transferFundsDto.getAmount()){
+
+        if(fromAccount.getBalance().compareTo(transferFundsDto.getAmount())<0){
             throw new InsufficientFundsException("Insufficient funds");
         }
-        froAcc.setBalance(froAcc.getBalance()-transferFundsDto.getAmount());
-        toAcc.setBalance(toAcc.getBalance()+transferFundsDto.getAmount());
+        fromAccount.setBalance(fromAccount.getBalance().subtract(transferFundsDto.getAmount()));
+        toAccount.setBalance(toAccount.getBalance().add(transferFundsDto.getAmount()));
 
-        accountRepository.save(toAcc);
-        accountRepository.save(froAcc);
 
-        Transaction DepoTransaction = new Transaction();
-        DepoTransaction.setAccountId(froAcc.getId());
-        DepoTransaction.setAmount(transferFundsDto.getAmount());
-        DepoTransaction.setTimestamp(LocalDateTime.now());
-        DepoTransaction.setTransactionType(TRANSACTION_TYPE_WITHDRAW);
+        Transaction depositTransaction = new Transaction();
+        depositTransaction.setAccountId(fromAccount.getId());
+        depositTransaction.setAmount(transferFundsDto.getAmount());
+        depositTransaction.setTimestamp(timestamp);
+        depositTransaction.setTransactionType(TRANSACTION_TYPE_WITHDRAW);
 
-        transactionRepository.save(DepoTransaction);
+        transactionRepository.save(depositTransaction);
 
-        Transaction WithTransaction = new Transaction();
-        WithTransaction.setAccountId(toAcc.getId());
-        WithTransaction.setAmount(transferFundsDto.getAmount());
-        WithTransaction.setTimestamp(LocalDateTime.now());
-        WithTransaction.setTransactionType(TRANSACTION_TYPE_DEPOSIT);
+        Transaction withdrawTransaction = new Transaction();
+        withdrawTransaction.setAccountId(toAccount.getId());
+        withdrawTransaction.setAmount(transferFundsDto.getAmount());
+        withdrawTransaction.setTimestamp(timestamp);
+        withdrawTransaction.setTransactionType(TRANSACTION_TYPE_DEPOSIT);
 
-        transactionRepository.save(WithTransaction);
+        transactionRepository.save(withdrawTransaction);
     }
 
 
     @Override
     public List<TransactionDto> getAllTransactions(Long accountId) {
         List<Transaction> transactions = transactionRepository.findByAccountIdOrderByTimestampDesc(accountId);
-        List<TransactionDto> collect = transactions.stream()
+        return transactions.stream()
                 .map((transactionMapper::toTransactionDto))
                 .collect(Collectors.toList());
 
-        return collect;
     }
 
 }

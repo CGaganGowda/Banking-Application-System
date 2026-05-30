@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
@@ -21,7 +22,7 @@ public class Transaction {
     private Long id;
     @Column(nullable = false)
     private Long accountId;
-    private double amount;
+    private BigDecimal amount;
     private String transactionType;
     private LocalDateTime timestamp;
 

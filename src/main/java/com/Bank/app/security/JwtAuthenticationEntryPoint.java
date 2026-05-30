@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-//Unauthorised user trying to access the resource will get a exception - 401 Unauthorised and a message
+//Unauthorised user trying to access the resource will get an exception - 401 Unauthorised and a message
 
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {

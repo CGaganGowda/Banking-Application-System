@@ -2,7 +2,6 @@ package com.Bank.app.config;
 
 import com.Bank.app.security.JwtAuthenticationEntryPoint;
 import com.Bank.app.security.JwtAuthenticationFilter;
-import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -25,8 +24,8 @@ public class SpringSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     public SpringSecurityConfig(@Lazy JwtAuthenticationFilter jwtAuthenticationFilter, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;

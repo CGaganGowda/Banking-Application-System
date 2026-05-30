@@ -21,6 +21,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
+
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -70,14 +72,14 @@ class AccountControllerTest {
     @Test
     @WithMockUser
     void getAccountById_existingAccount_returns200WithDto() throws Exception {
-        AccountDto dto = new AccountDto(1L, "Gagan Gowda", 5000.0);
+        AccountDto dto = new AccountDto(1L, "Gagan Gowda", BigDecimal.valueOf(5000));
         when(accountService.getAccountById(1L)).thenReturn(dto);
 
         mockMvc.perform(get("/api/accounts/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Gagan Gowda"))
-                .andExpect(jsonPath("$.balance").value(5000.0));
+                .andExpect(jsonPath("$.balance").value(BigDecimal.valueOf(5000)));
     }
 
     @Order(2)
@@ -95,8 +97,8 @@ class AccountControllerTest {
     @Test
     @WithMockUser
     void createAccount_validBody_returns201() throws Exception {
-        AccountDto request = new AccountDto(null, "Gagan Gowda", 1000.0);
-        AccountDto saved   = new AccountDto(1L,   "Gagan Gowda", 1000.0);
+        AccountDto request = new AccountDto(null, "Gagan Gowda", BigDecimal.valueOf(1000));
+        AccountDto saved   = new AccountDto(1L,   "Gagan Gowda", BigDecimal.valueOf(1000));
         when(accountService.createAccount(any())).thenReturn(saved);
 
         mockMvc.perform(post("/api/accounts")
@@ -111,14 +113,14 @@ class AccountControllerTest {
     @Test
     @WithMockUser
     void deposit_validAmount_returns200WithUpdatedBalance() throws Exception {
-        AccountDto updated = new AccountDto(1L, "Gagan Gowda", 1500.0);
-        when(accountService.deposit(1L, 500.0)).thenReturn(updated);
+        AccountDto updated = new AccountDto(1L, "Gagan Gowda", BigDecimal.valueOf(1500));
+        when(accountService.deposit(1L, BigDecimal.valueOf(500))).thenReturn(updated);
 
         mockMvc.perform(put("/api/accounts/1/deposit")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"amount\": 500.0}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.balance").value(1500.0));
+                .andExpect(jsonPath("$.balance").value(BigDecimal.valueOf(1500)));
     }
 }

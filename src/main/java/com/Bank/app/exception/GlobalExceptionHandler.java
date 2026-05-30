@@ -24,7 +24,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(InsufficientFundsException.class)
-    public ResponseEntity<ErrorDetails> handle(InsufficientFundsException exception, WebRequest request){
+    public ResponseEntity<ErrorDetails> handleInsufficientFundsException(InsufficientFundsException exception, WebRequest request){
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
                 exception.getMessage(),

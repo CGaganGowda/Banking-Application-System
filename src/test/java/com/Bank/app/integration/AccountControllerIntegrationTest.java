@@ -12,6 +12,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import java.math.BigDecimal;
+
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,7 +41,7 @@ public class AccountControllerIntegrationTest {
 
         Account account = Account.builder()
                 .name("Integrate-Test")
-                .balance(40000L)
+                .balance(BigDecimal.valueOf(40000))
                 .build();
 
         accountRepository.save(account);
@@ -71,7 +73,7 @@ public class AccountControllerIntegrationTest {
 
         Account account = Account.builder()
                 .name("Integrate-Test-1")
-                .balance(5000)
+                .balance(BigDecimal.valueOf(5000))
                 .build();
 
         mockMvc.perform(post("/api/accounts")
@@ -90,7 +92,7 @@ public class AccountControllerIntegrationTest {
     void deposit_validAmount_returns200WithUpdatedBalance() throws Exception {
         Account account = Account.builder()
                 .name("Integrate-Test-2")
-                .balance(5000)
+                .balance(BigDecimal.valueOf(5000))
                 .build();
 
         accountRepository.save(account);
@@ -98,10 +100,10 @@ public class AccountControllerIntegrationTest {
         mockMvc.perform(put("/api/accounts/{id}/deposit", account.getId())
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"amount\": 555.0}"))
+                        .content("{\"amount\": 555}"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.balance").value(5555.0));
+                .andExpect(jsonPath("$.balance").value(BigDecimal.valueOf(5555.0)));
     }
 
 }

@@ -11,13 +11,12 @@ public class TransactionMapper {
 
 
     public TransactionDto toTransactionDto(Transaction transaction) {
-        TransactionDto transactionDto = new TransactionDto(
+        return new TransactionDto(
                 transaction.getId(),
                 transaction.getAccountId(),
                 transaction.getAmount(),
                 transaction.getTransactionType(),
                 transaction.getTimestamp()
         );
-        return transactionDto;
     }
 }

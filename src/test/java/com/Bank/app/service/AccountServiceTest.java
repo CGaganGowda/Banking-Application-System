@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -49,10 +50,10 @@ class AccountServiceTest {
     @DisplayName("Create Account")
     @Test
     void createAccount_validInput_returnsAccountDto() {
-        AccountDto inputDto    = buildAccountDto(null, "Gagan", 5000.0);
-        Account    mapped      = buildAccount(null, "Gagan", 5000.0);
-        Account    saved       = buildAccount(1L, "Gagan", 5000.0);
-        AccountDto expectedDto = buildAccountDto(1L, "Gagan", 5000.0);
+        AccountDto inputDto    = buildAccountDto(null, "Gagan", BigDecimal.valueOf(5000));
+        Account    mapped      = buildAccount(null, "Gagan", BigDecimal.valueOf(5000));
+        Account    saved       = buildAccount(1L, "Gagan", BigDecimal.valueOf(5000));
+        AccountDto expectedDto = buildAccountDto(1L, "Gagan", BigDecimal.valueOf(5000));
 
         when(accountMapper.toAccount(inputDto)).thenReturn(mapped);
         when(accountRepository.save(mapped)).thenReturn(saved);
@@ -62,7 +63,7 @@ class AccountServiceTest {
 
         assertThat(result.getId()).isEqualTo(1L);
         assertThat(result.getName()).isEqualTo("Gagan");
-        assertThat(result.getBalance()).isEqualTo(5000.0);
+        assertThat(result.getBalance()).isEqualTo(BigDecimal.valueOf(5000));
         verify(accountRepository).save(mapped);
     }
 
@@ -70,8 +71,8 @@ class AccountServiceTest {
 
     @Test
     void getAccountById_validId_returnsAccountDto() {
-        Account    account     = buildAccount(1L, "Gagan", 5000.0);
-        AccountDto expectedDto = buildAccountDto(1L, "Gagan", 5000.0);
+        Account    account     = buildAccount(1L, "Gagan", BigDecimal.valueOf(5000));
+        AccountDto expectedDto = buildAccountDto(1L, "Gagan", BigDecimal.valueOf(5000));
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
         when(accountMapper.toAccountDto(account)).thenReturn(expectedDto);
@@ -94,17 +95,17 @@ class AccountServiceTest {
 
     @Test
     void deposit_validAmount_returnsUpdatedAccountDto() {
-        Account    account     = buildAccount(1L, "Gagan", 1000.0);
-        Account    saved       = buildAccount(1L, "Gagan", 5000.0);
-        AccountDto expectedDto = buildAccountDto(1L, "Gagan", 5000.0);
+        Account    account     = buildAccount(1L, "Gagan", BigDecimal.valueOf(1000));
+        Account    saved       = buildAccount(1L, "Gagan", BigDecimal.valueOf(5000));
+        AccountDto expectedDto = buildAccountDto(1L, "Gagan", BigDecimal.valueOf(5000));
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
         when(accountRepository.save(account)).thenReturn(saved);
         when(accountMapper.toAccountDto(saved)).thenReturn(expectedDto);
 
-        AccountDto result = accountService.deposit(1L, 4000.0);
+        AccountDto result = accountService.deposit(1L, BigDecimal.valueOf(4000));
 
-        assertThat(result.getBalance()).isEqualTo(5000.0);
+        assertThat(result.getBalance()).isEqualTo(BigDecimal.valueOf(5000));
         verify(accountRepository).save(account);
         verify(transactionRepository).save(any(Transaction.class));
     }
@@ -114,7 +115,7 @@ class AccountServiceTest {
         when(accountRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(IdNotFoundException.class,
-                () -> accountService.deposit(99L, 4000.0));
+                () -> accountService.deposit(99L, BigDecimal.valueOf(4000)));
 
         verify(transactionRepository, never()).save(any());
     }
@@ -123,29 +124,29 @@ class AccountServiceTest {
 
     @Test
     void withdraw_validAmount_returnsUpdatedAccountDto() {
-        Account    account     = buildAccount(1L, "Gagan", 5000.0);
-        Account    saved       = buildAccount(1L, "Gagan", 1000.0);
-        AccountDto expectedDto = buildAccountDto(1L, "Gagan", 1000.0);
+        Account    account     = buildAccount(1L, "Gagan", BigDecimal.valueOf(5000));
+        Account    saved       = buildAccount(1L, "Gagan", BigDecimal.valueOf(1000));
+        AccountDto expectedDto = buildAccountDto(1L, "Gagan", BigDecimal.valueOf(1000));
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
         when(accountRepository.save(account)).thenReturn(saved);
         when(accountMapper.toAccountDto(saved)).thenReturn(expectedDto);
 
-        AccountDto result = accountService.withdraw(1L, 4000.0);
+        AccountDto result = accountService.withdraw(1L, BigDecimal.valueOf(4000));
 
-        assertThat(result.getBalance()).isEqualTo(1000.0);
+        assertThat(result.getBalance()).isEqualTo(BigDecimal.valueOf(1000));
         verify(accountRepository).save(account);
         verify(transactionRepository).save(any(Transaction.class));
     }
 
     @Test
     void withdraw_insufficientFunds_throwsInsufficientFundsException() {
-        Account account = buildAccount(1L, "Gagan", 500.0);
+        Account account = buildAccount(1L, "Gagan", BigDecimal.valueOf(500));
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
 
         assertThrows(InsufficientFundsException.class,
-                () -> accountService.withdraw(1L, 4000.0));
+                () -> accountService.withdraw(1L, BigDecimal.valueOf(4000)));
 
         verify(accountRepository, never()).save(any());
         verify(transactionRepository, never()).save(any());
@@ -155,10 +156,10 @@ class AccountServiceTest {
 
     @Test
     void getAllAccounts_returnsListOfAccountDto() {
-        Account    acc1 = buildAccount(1L, "Gagan",  5000.0);
-        Account    acc2 = buildAccount(2L, "Rakesh", 8000.0);
-        AccountDto dto1 = buildAccountDto(1L, "Gagan",  5000.0);
-        AccountDto dto2 = buildAccountDto(2L, "Rakesh", 8000.0);
+        Account    acc1 = buildAccount(1L, "Gagan",  BigDecimal.valueOf(5000));
+        Account    acc2 = buildAccount(2L, "Rakesh", BigDecimal.valueOf(8000));
+        AccountDto dto1 = buildAccountDto(1L, "Gagan",  BigDecimal.valueOf(5000));
+        AccountDto dto2 = buildAccountDto(2L, "Rakesh", BigDecimal.valueOf(8000));
 
         when(accountRepository.findAll()).thenReturn(List.of(acc1, acc2));
         when(accountMapper.toAccountDto(acc1)).thenReturn(dto1);
@@ -175,7 +176,7 @@ class AccountServiceTest {
 
     @Test
     void deleteAccountById_validId_deletesSuccessfully() {
-        Account account = buildAccount(1L, "Gagan", 5000.0);
+        Account account = buildAccount(1L, "Gagan", BigDecimal.valueOf(5000));
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
 
@@ -198,26 +199,26 @@ class AccountServiceTest {
 
     @Test
     void transferFunds_validAccounts_transfersSuccessfully() {
-        Account fromAcc = buildAccount(1L, "Gagan",  5000.0);
-        Account toAcc   = buildAccount(2L, "Rakesh", 1000.0);
-        TransferFundsDto dto = new TransferFundsDto(1L, 2L, 2000.0);
+        Account fromAcc = buildAccount(1L, "Gagan",  BigDecimal.valueOf(5000));
+        Account toAcc   = buildAccount(2L, "Rakesh", BigDecimal.valueOf(1000));
+        TransferFundsDto dto = new TransferFundsDto(1L, 2L, BigDecimal.valueOf(2000));
 
         when(accountRepository.findById(2L)).thenReturn(Optional.of(toAcc));
         when(accountRepository.findById(1L)).thenReturn(Optional.of(fromAcc));
 
         accountService.transferFunds(dto);
 
-        assertThat(fromAcc.getBalance()).isEqualTo(3000.0);
-        assertThat(toAcc.getBalance()).isEqualTo(3000.0);
+        assertThat(fromAcc.getBalance()).isEqualTo(BigDecimal.valueOf(3000));
+        assertThat(toAcc.getBalance()).isEqualTo(BigDecimal.valueOf(3000));
         verify(accountRepository, times(2)).save(any(Account.class));
         verify(transactionRepository, times(2)).save(any(Transaction.class));
     }
 
     @Test
     void transferFunds_insufficientFunds_throwsInsufficientFundsException() {
-        Account fromAcc = buildAccount(1L, "Gagan", 500.0);
-        Account toAcc   = buildAccount(2L, "Rakesh", 1000.0);
-        TransferFundsDto dto = new TransferFundsDto(1L, 2L, 2000.0);
+        Account fromAcc = buildAccount(1L, "Gagan", BigDecimal.valueOf(500));
+        Account toAcc   = buildAccount(2L, "Rakesh", BigDecimal.valueOf(1000));
+        TransferFundsDto dto = new TransferFundsDto(1L, 2L, BigDecimal.valueOf(2000));
 
         when(accountRepository.findById(2L)).thenReturn(Optional.of(toAcc));
         when(accountRepository.findById(1L)).thenReturn(Optional.of(fromAcc));
@@ -233,10 +234,10 @@ class AccountServiceTest {
 
     @Test
     void getAllTransactions_validAccountId_returnsTransactionDtoList() {
-        Transaction    t1   = buildTransaction(1L, 1L, 5000.0, "DEPOSIT");
-        Transaction    t2   = buildTransaction(2L, 1L, 2000.0, "WITHDRAW");
-        TransactionDto dto1 = new TransactionDto(1L, 1L, 5000.0, "DEPOSIT",  LocalDateTime.now());
-        TransactionDto dto2 = new TransactionDto(2L, 1L, 2000.0, "WITHDRAW", LocalDateTime.now());
+        Transaction    t1   = buildTransaction(1L, 1L, BigDecimal.valueOf(5000), "DEPOSIT");
+        Transaction    t2   = buildTransaction(2L, 1L, BigDecimal.valueOf(2000), "WITHDRAW");
+        TransactionDto dto1 = new TransactionDto(1L, 1L, BigDecimal.valueOf(5000), "DEPOSIT",  LocalDateTime.now());
+        TransactionDto dto2 = new TransactionDto(2L, 1L, BigDecimal.valueOf(2000), "WITHDRAW", LocalDateTime.now());
 
         when(transactionRepository.findByAccountIdOrderByTimestampDesc(1L))
                 .thenReturn(List.of(t1, t2));
@@ -252,7 +253,7 @@ class AccountServiceTest {
 
     // ── helpers ──────────────────────────────────────────────────
 
-    private Account buildAccount(Long id, String name, double balance) {
+    private Account buildAccount(Long id, String name, BigDecimal balance) {
         Account account = new Account();
         account.setId(id);
         account.setName(name);
@@ -260,11 +261,11 @@ class AccountServiceTest {
         return account;
     }
 
-    private AccountDto buildAccountDto(Long id, String name, double balance) {
+    private AccountDto buildAccountDto(Long id, String name, BigDecimal balance) {
         return new AccountDto(id, name, balance);
     }
 
-    private Transaction buildTransaction(Long id, Long accountId, double amount, String type) {
+    private Transaction buildTransaction(Long id, Long accountId, BigDecimal amount, String type) {
         Transaction t = new Transaction();
         t.setId(id);
         t.setAccountId(accountId);

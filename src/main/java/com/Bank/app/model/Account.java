@@ -3,6 +3,8 @@ package com.Bank.app.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Builder
 @Getter
 @Setter
@@ -17,6 +19,8 @@ public class Account {
     private Long id;
     @Column(unique=true, nullable=false)
     private String name;
-    private double balance;
+
+    @Column(precision =  19, scale = 2)
+    private BigDecimal balance;
 }
 

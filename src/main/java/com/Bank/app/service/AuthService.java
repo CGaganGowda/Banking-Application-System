@@ -6,7 +6,6 @@ import  com.Bank.app.dto.UserDto;
 import  com.Bank.app.model.Role;
 import com.Bank.app.model.User;
 
-import java.util.Optional;
 
 public interface AuthService {
     User register(UserDto userDto);
