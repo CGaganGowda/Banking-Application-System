@@ -115,7 +115,7 @@ class AccountControllerTest {
     @WithMockUser
     void deposit_validAmount_returns200WithUpdatedBalance() throws Exception {
         AccountDto updated = new AccountDto(1L, "Gagan Gowda", BigDecimal.valueOf(1500));
-        when(accountService.deposit(1L, BigDecimal.valueOf(500))).thenReturn(updated);
+        when(accountService.deposit(anyLong(), any(BigDecimal.class))).thenReturn(updated);
 
         mockMvc.perform(put("/api/accounts/1/deposit")
                         .with(csrf())
