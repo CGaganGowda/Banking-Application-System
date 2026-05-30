@@ -59,8 +59,7 @@ public class AuthServiceImpl implements AuthService {
         user.setRoles(roles);
 
         User savedUser = userRepo.save(user);
-        RegisterDto registerDto = modelMapper.map(savedUser, RegisterDto.class);
-        return registerDto;
+        return modelMapper.map(savedUser, RegisterDto.class);
     }
 
     /*
