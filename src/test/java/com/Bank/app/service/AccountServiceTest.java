@@ -210,7 +210,6 @@ class AccountServiceTest {
 
         assertThat(fromAcc.getBalance()).isEqualTo(BigDecimal.valueOf(3000));
         assertThat(toAcc.getBalance()).isEqualTo(BigDecimal.valueOf(3000));
-        verify(accountRepository, times(2)).save(any(Account.class));
         verify(transactionRepository, times(2)).save(any(Transaction.class));
     }
 

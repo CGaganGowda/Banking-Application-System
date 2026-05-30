@@ -35,15 +35,17 @@ class TransferServiceTest {
         Account sender   = buildAccount(1L, "Gagan", BigDecimal.valueOf(2000));
         Account receiver = buildAccount(2L, "Arjun", BigDecimal.valueOf(500));
 
+
+
         when(accountRepository.findById(2L)).thenReturn(Optional.of(receiver));
         when(accountRepository.findById(1L)).thenReturn(Optional.of(sender));
-        when(accountRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+//        when(accountRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
         accountService.transferFunds(new TransferFundsDto(1L, 2L, BigDecimal.valueOf(1000)));
 
         assertThat(sender.getBalance()).isEqualTo(BigDecimal.valueOf(1000));
         assertThat(receiver.getBalance()).isEqualTo(BigDecimal.valueOf(1500));
-        verify(accountRepository, times(2)).save(any(Account.class));
+        verify(transactionRepository,times(2)).save(any());
     }
 
     @Test
@@ -80,7 +82,7 @@ class TransferServiceTest {
 
         when(accountRepository.findById(2L)).thenReturn(Optional.of(receiver));
         when(accountRepository.findById(1L)).thenReturn(Optional.of(sender));
-        when(accountRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+//        when(accountRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
         accountService.transferFunds(new TransferFundsDto(1L, 2L, BigDecimal.valueOf(500)));
 

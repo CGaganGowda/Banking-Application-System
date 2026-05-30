@@ -64,8 +64,8 @@ public class AccountController {
     )
     @PutMapping("{id}/deposit")
     public ResponseEntity<AccountDto> depositMoney(@PathVariable Long id,@RequestBody Map<String,Double> map){
-        double amount = map.get("amount");
-        return new ResponseEntity<>(accountService.deposit(id, BigDecimal.valueOf(amount)),HttpStatus.OK);
+        BigDecimal amount = BigDecimal.valueOf(map.get("amount"));
+        return new ResponseEntity<>(accountService.deposit(id, amount),HttpStatus.OK);
     }
 
         @Operation(
