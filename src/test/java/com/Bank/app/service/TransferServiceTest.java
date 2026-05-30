@@ -5,6 +5,7 @@ import com.Bank.app.exception.IdNotFoundException;
 import com.Bank.app.exception.InsufficientFundsException;
 import com.Bank.app.model.Account;
 import com.Bank.app.repo.AccountRepository;
+import com.Bank.app.repo.TransactionRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,6 +23,9 @@ class TransferServiceTest {
 
     @Mock
     private AccountRepository accountRepository;
+
+    @Mock
+    private TransactionRepository transactionRepository;
 
     @InjectMocks
     private AccountServiceImpl accountService;
@@ -80,7 +84,7 @@ class TransferServiceTest {
 
         accountService.transferFunds(new TransferFundsDto(1L, 2L, BigDecimal.valueOf(500)));
 
-        assertThat(sender.getBalance()).isEqualTo(BigDecimal.valueOf(0));
+        assertThat(sender.getBalance()).isEqualTo(BigDecimal.ZERO);
         assertThat(receiver.getBalance()).isEqualTo(BigDecimal.valueOf(500));
     }
 
