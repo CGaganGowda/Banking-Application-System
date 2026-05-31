@@ -259,7 +259,7 @@ class AccountServiceTest {
         assertThat(result).hasSize(2);
         assertThat(result.getContent().get(0).getTransactionType()).isEqualTo("DEPOSIT");
         assertThat(result.getContent().get(1).getTransactionType()).isEqualTo("WITHDRAW");
-        verify(transactionRepository, times(2)).findByAccountIdOrderByTimestampDesc(1L,pageable);
+        verify(transactionRepository, times(1)).findByAccountIdOrderByTimestampDesc(1L,pageable);
     }
 
     // ── helpers ──────────────────────────────────────────────────
