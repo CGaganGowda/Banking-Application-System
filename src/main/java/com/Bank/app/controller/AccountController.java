@@ -11,6 +11,7 @@ import com.Bank.app.dto.TransferFundsDto;
 import com.Bank.app.service.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -37,10 +38,12 @@ public class AccountController {
             responseCode = "201",
             description = "CUSTOMER CREATED"
     )
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','EMPLOYEE')")
     @PostMapping("")
     public ResponseEntity<AccountDto> createAccount(@RequestBody @Valid AccountDto accountDto) {
         return new ResponseEntity<>(accountService.createAccount(accountDto), HttpStatus.CREATED);
     }
+
 
     @Operation(
             summary = "GET CUSTOMER ON ID",
@@ -50,10 +53,12 @@ public class AccountController {
             responseCode = "200",
             description = "Customer with given ID is returned."
     )
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','EMPLOYEE','CUSTOMER')")
     @GetMapping("{id}")
     public ResponseEntity<AccountDto> getAccountId(@PathVariable Long id){
         return new ResponseEntity<>(accountService.getAccountById(id), HttpStatus.OK);
     }
+
 
     @Operation(
             summary = "DEPOSIT AMOUNT",
@@ -63,13 +68,15 @@ public class AccountController {
             responseCode = "200",
             description = "Amount is deposited in to customer's account and balance is displayed."
     )
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','EMPLOYEE','CUSTOMER')")
     @PutMapping("{id}/deposit")
     public ResponseEntity<AccountDto> depositMoney(@PathVariable Long id,@RequestBody Map<String,Double> map){
         BigDecimal amount = BigDecimal.valueOf(map.get("amount"));
         return new ResponseEntity<>(accountService.deposit(id, amount),HttpStatus.OK);
     }
 
-        @Operation(
+
+    @Operation(
             summary = "WITHDRAW AMOUNT",
             description = "Withdraws the amount from  the customer's account"
     )
@@ -77,11 +84,13 @@ public class AccountController {
             responseCode = "200",
             description = "Amount is withdrawn from the customer's account and balance is displayed."
     )
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','EMPLOYEE','CUSTOMER')")
     @PutMapping("{id}/withdraw")
     public ResponseEntity<AccountDto> withdrawMoney(@PathVariable Long id,@RequestBody Map<String,Double> map){
         double amount = map.get("amount");
         return new ResponseEntity<>(accountService.withdraw(id, BigDecimal.valueOf(amount)),HttpStatus.OK);
     }
+
 
     @Operation(
             summary = "GET ALL CUSTOMERS",
@@ -91,10 +100,13 @@ public class AccountController {
             responseCode = "200",
             description = "Customers are returned."
     )
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','EMPLOYEE')")
     @GetMapping()
     public ResponseEntity<List<AccountDto>> getAllAccounts(){
         return new ResponseEntity<>(accountService.getAllAccounts(),HttpStatus.OK);
     }
+
+
 
     @Operation(
             summary = "DELETE Customer with given ID",
@@ -104,6 +116,7 @@ public class AccountController {
             responseCode = "204",
             description = "Customer is deleted."
     )
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','EMPLOYEE')")
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteAccount(@PathVariable Long id){
         accountService.deleteAccountById(id);
@@ -118,6 +131,7 @@ public class AccountController {
             responseCode = "200",
             description = "Funds transferred successfully."
     )
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','EMPLOYEE','CUSTOMER')")
     @PostMapping("transfer")
     public ResponseEntity<String> transferAmount(@RequestBody @Valid TransferFundsDto transferFundsDto){
         accountService.transferFunds(transferFundsDto);
@@ -132,6 +146,7 @@ public class AccountController {
             responseCode = "200",
             description = "Transactions shown successfully"
     )
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','EMPLOYEE','CUSTOMER')")
     @GetMapping("{id}/transactions")
     public ResponseEntity<List<TransactionDto>> getAllTransactionsByAccountId(@PathVariable Long id){
         return new ResponseEntity<>(accountService.getAllTransactions(id),HttpStatus.OK);
