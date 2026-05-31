@@ -3,6 +3,7 @@ package com.Bank.app.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import com.Bank.app.dto.AccountDto;
 import com.Bank.app.dto.TransactionDto;
@@ -37,7 +38,7 @@ public class AccountController {
             description = "CUSTOMER CREATED"
     )
     @PostMapping("")
-    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto accountDto) {
+    public ResponseEntity<AccountDto> createAccount(@RequestBody @Valid AccountDto accountDto) {
         return new ResponseEntity<>(accountService.createAccount(accountDto), HttpStatus.CREATED);
     }
 
@@ -118,7 +119,7 @@ public class AccountController {
             description = "Funds transferred successfully."
     )
     @PostMapping("transfer")
-    public ResponseEntity<String> transferAmount(@RequestBody TransferFundsDto transferFundsDto){
+    public ResponseEntity<String> transferAmount(@RequestBody @Valid TransferFundsDto transferFundsDto){
         accountService.transferFunds(transferFundsDto);
         return new ResponseEntity<>("Amount is successfully transferred",HttpStatus.OK);
     }

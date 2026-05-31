@@ -1,5 +1,7 @@
 package com.Bank.app.dto;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,5 +16,8 @@ import java.math.BigDecimal;
 public class TransferFundsDto{
     private Long fromAccountId;
     private Long toAccountId;
+
+    @Positive
+    @Min(0)
     private BigDecimal amount;
 }
