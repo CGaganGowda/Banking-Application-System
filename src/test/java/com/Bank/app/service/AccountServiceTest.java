@@ -17,6 +17,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -161,15 +165,19 @@ class AccountServiceTest {
         AccountDto dto1 = buildAccountDto(1L, "Gagan",  BigDecimal.valueOf(5000));
         AccountDto dto2 = buildAccountDto(2L, "Rakesh", BigDecimal.valueOf(8000));
 
-        when(accountRepository.findAll()).thenReturn(List.of(acc1, acc2));
+        Pageable pageable = PageRequest.of(0,10);
+        Page<Account> accountPage = new PageImpl<>(List.of(acc1,acc2),pageable,2);
+
+        when(accountRepository.findAll(pageable)).thenReturn(accountPage);
         when(accountMapper.toAccountDto(acc1)).thenReturn(dto1);
         when(accountMapper.toAccountDto(acc2)).thenReturn(dto2);
 
-        List<AccountDto> result = accountService.getAllAccounts();
+        Page<AccountDto> result = accountService.getAllAccounts(pageable);
 
-        assertThat(result).hasSize(2);
-        assertThat(result.get(0).getName()).isEqualTo("Gagan");
-        assertThat(result.get(1).getName()).isEqualTo("Rakesh");
+        assertThat(result.getContent()).hasSize(2);
+        assertThat(result.getContent().get(0).getName()).isEqualTo("Gagan");
+        assertThat(result.getContent().get(1).getName()).isEqualTo("Rakesh");
+        verify(accountRepository).findAll(pageable);
     }
 
     // ── deleteAccountById ────────────────────────────────────────
@@ -238,16 +246,20 @@ class AccountServiceTest {
         TransactionDto dto1 = new TransactionDto(1L, 1L, BigDecimal.valueOf(5000), "DEPOSIT",  LocalDateTime.now());
         TransactionDto dto2 = new TransactionDto(2L, 1L, BigDecimal.valueOf(2000), "WITHDRAW", LocalDateTime.now());
 
-        when(transactionRepository.findByAccountIdOrderByTimestampDesc(1L))
-                .thenReturn(List.of(t1, t2));
+        Pageable pageable = PageRequest.of(0,10);
+        Page<Transaction> transactionPage = new PageImpl<>(List.of(t1,t2),pageable,2);
+
+        when(transactionRepository.findByAccountIdOrderByTimestampDesc(1L,pageable))
+                .thenReturn(transactionPage);
         when(transactionMapper.toTransactionDto(t1)).thenReturn(dto1);
         when(transactionMapper.toTransactionDto(t2)).thenReturn(dto2);
 
-        List<TransactionDto> result = accountService.getAllTransactions(1L);
+        Page<TransactionDto> result = accountService.getAllTransactions(1L,pageable);
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getTransactionType()).isEqualTo("DEPOSIT");
-        assertThat(result.get(1).getTransactionType()).isEqualTo("WITHDRAW");
+        assertThat(result.getContent().get(0).getTransactionType()).isEqualTo("DEPOSIT");
+        assertThat(result.getContent().get(1).getTransactionType()).isEqualTo("WITHDRAW");
+        verify(transactionRepository, times(2)).findByAccountIdOrderByTimestampDesc(1L,pageable);
     }
 
     // ── helpers ──────────────────────────────────────────────────

@@ -7,13 +7,13 @@ import com.Bank.app.dto.*;
 import com.Bank.app.model.*;
 import com.Bank.app.repo.*;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 
@@ -93,12 +93,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<AccountDto> getAllAccounts() {
-        List<Account> accountList =  accountRepository.findAll();
-         return accountList.stream()
-                //.map((Account) -> accountMapper.toAccountDto(Account))
-                 .map(accountMapper::toAccountDto)
-                .toList();
+    public Page<AccountDto> getAllAccounts(Pageable pageable) {
+        Page<Account> accountList =  accountRepository.findAll(pageable);
+         return accountList.map(accountMapper::toAccountDto);
     }
 
     @Override
@@ -158,11 +155,9 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public List<TransactionDto> getAllTransactions(Long accountId) {
-        List<Transaction> transactions = transactionRepository.findByAccountIdOrderByTimestampDesc(accountId);
-        return transactions.stream()
-                .map((transactionMapper::toTransactionDto))
-                .collect(Collectors.toList());
+    public Page<TransactionDto> getAllTransactions(Long accountId,Pageable pageable) {
+        Page<Transaction> transactions = transactionRepository.findByAccountIdOrderByTimestampDesc(accountId,pageable);
+        return transactions.map(transactionMapper::toTransactionDto);
 
     }
 

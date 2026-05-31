@@ -9,6 +9,10 @@ import com.Bank.app.dto.AccountDto;
 import com.Bank.app.dto.TransactionDto;
 import com.Bank.app.dto.TransferFundsDto;
 import com.Bank.app.service.AccountService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -102,8 +106,14 @@ public class AccountController {
     )
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','EMPLOYEE')")
     @GetMapping()
-    public ResponseEntity<List<AccountDto>> getAllAccounts(){
-        return new ResponseEntity<>(accountService.getAllAccounts(),HttpStatus.OK);
+    public ResponseEntity<Page<AccountDto>> getAllAccounts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String direction){
+        Sort.Direction sortDirection = direction.equalsIgnoreCase("desc")?Sort.Direction.DESC:Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+        return new ResponseEntity<>(accountService.getAllAccounts(pageable),HttpStatus.OK);
     }
 
 
@@ -148,8 +158,8 @@ public class AccountController {
     )
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','EMPLOYEE','CUSTOMER')")
     @GetMapping("{id}/transactions")
-    public ResponseEntity<List<TransactionDto>> getAllTransactionsByAccountId(@PathVariable Long id){
-        return new ResponseEntity<>(accountService.getAllTransactions(id),HttpStatus.OK);
+    public ResponseEntity<Page<TransactionDto>> getAllTransactionsByAccountId(@PathVariable Long id, Pageable pageable){
+        return new ResponseEntity<>(accountService.getAllTransactions(id,pageable),HttpStatus.OK);
     }
 
 
