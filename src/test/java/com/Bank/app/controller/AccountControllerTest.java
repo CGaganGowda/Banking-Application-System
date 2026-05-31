@@ -71,7 +71,7 @@ class AccountControllerTest {
 
     @Order(1)
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN","MANAGER","EMPLOYEE","CUSTOMER"})
     void getAccountById_existingAccount_returns200WithDto() throws Exception {
         AccountDto dto = new AccountDto(1L, "Gagan Gowda", BigDecimal.valueOf(5000));
         when(accountService.getAccountById(1L)).thenReturn(dto);
@@ -85,7 +85,7 @@ class AccountControllerTest {
 
     @Order(2)
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN","MANAGER","EMPLOYEE","CUSTOMER"})
     void getAccountById_nonExistingAccount_returns404() throws Exception {
         when(accountService.getAccountById(99L))
                 .thenThrow(new IdNotFoundException("Account not found with id: 99"));
@@ -96,7 +96,7 @@ class AccountControllerTest {
 
     @Order(3)
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN","MANAGER","EMPLOYEE"})
     void createAccount_validBody_returns201() throws Exception {
         AccountDto request = new AccountDto(null, "Gagan Gowda", BigDecimal.valueOf(1000));
         AccountDto saved   = new AccountDto(1L,   "Gagan Gowda", BigDecimal.valueOf(1000));
@@ -112,7 +112,7 @@ class AccountControllerTest {
 
     @Order(4)
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN","MANAGER","EMPLOYEE","CUSTOMER"})
     void deposit_validAmount_returns200WithUpdatedBalance() throws Exception {
         AccountDto updated = new AccountDto(1L, "Gagan Gowda", BigDecimal.valueOf(1500));
         when(accountService.deposit(anyLong(), any(BigDecimal.class))).thenReturn(updated);

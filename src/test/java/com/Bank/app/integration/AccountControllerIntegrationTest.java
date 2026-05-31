@@ -36,7 +36,7 @@ public class AccountControllerIntegrationTest {
     @Order(1)
     @DisplayName("Get Account By ID")
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN","MANAGER","EMPLOYEE","CUSTOMER"})
     void getAccountById_existingAccount_returns200WithDto() throws Exception {
 
         Account account = Account.builder()
@@ -56,7 +56,7 @@ public class AccountControllerIntegrationTest {
     @Order(2)
     @DisplayName("Get Account by ID - Exception")
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN","MANAGER","EMPLOYEE","CUSTOMER"})
     void getAccountById_nonExistingAccount_returns404() throws Exception {
 
 
@@ -68,7 +68,7 @@ public class AccountControllerIntegrationTest {
     @Order(3)
     @DisplayName("Account Creation")
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN","MANAGER","EMPLOYEE"})
     void createAccount_validBody_returns201() throws Exception {
 
         Account account = Account.builder()
@@ -88,7 +88,7 @@ public class AccountControllerIntegrationTest {
     @Order(4)
     @DisplayName("Deposit Amount")
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"ADMIN","MANAGER","EMPLOYEE","CUSTOMER"})
     void deposit_validAmount_returns200WithUpdatedBalance() throws Exception {
         Account account = Account.builder()
                 .name("Integrate-Test-2")
