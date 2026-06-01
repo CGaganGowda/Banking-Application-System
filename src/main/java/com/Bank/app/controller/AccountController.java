@@ -74,8 +74,8 @@ public class AccountController {
     )
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','EMPLOYEE','CUSTOMER')")
     @PutMapping("{id}/deposit")
-    public ResponseEntity<AccountDto> depositMoney(@PathVariable Long id,@RequestBody Map<String,Double> map){
-        BigDecimal amount = BigDecimal.valueOf(map.get("amount"));
+    public ResponseEntity<AccountDto> depositMoney(@PathVariable Long id,@RequestBody Map<String,BigDecimal> map){
+        BigDecimal amount = map.get("amount");
         return new ResponseEntity<>(accountService.deposit(id, amount),HttpStatus.OK);
     }
 
@@ -90,9 +90,9 @@ public class AccountController {
     )
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','EMPLOYEE','CUSTOMER')")
     @PutMapping("{id}/withdraw")
-    public ResponseEntity<AccountDto> withdrawMoney(@PathVariable Long id,@RequestBody Map<String,Double> map){
-        double amount = map.get("amount");
-        return new ResponseEntity<>(accountService.withdraw(id, BigDecimal.valueOf(amount)),HttpStatus.OK);
+    public ResponseEntity<AccountDto> withdrawMoney(@PathVariable Long id,@RequestBody Map<String,BigDecimal> map){
+        BigDecimal amount = map.get("amount");
+        return new ResponseEntity<>(accountService.withdraw(id, amount),HttpStatus.OK);
     }
 
 
