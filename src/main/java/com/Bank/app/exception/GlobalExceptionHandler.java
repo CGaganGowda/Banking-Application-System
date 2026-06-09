@@ -41,8 +41,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
     
-    @ExceptionHandler(value = TodoApiException.class)
-    public ResponseEntity<ErrorDetails> handleTodoApiException(TodoApiException exception, WebRequest request){
+    @ExceptionHandler(value = BankApiException.class)
+    public ResponseEntity<ErrorDetails> handleBankApiException(BankApiException exception, WebRequest request){
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
                 exception.getMessage(),
