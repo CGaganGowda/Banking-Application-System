@@ -4,7 +4,7 @@ import com.Bank.app.dto.LoginDto;
 import com.Bank.app.dto.RegisterDto;
 import com.Bank.app.dto.RoleDto;
 import com.Bank.app.dto.UserDto;
-import com.Bank.app.exception.TodoApiException;
+import com.Bank.app.exception.BankApiException;
 import com.Bank.app.model.Role;
 import com.Bank.app.model.User;
 import com.Bank.app.repo.RoleRepo;
@@ -40,11 +40,11 @@ public class AuthServiceImpl implements AuthService {
 
 
         if(userRepo.existsByUsername(userDto.getUsername())){
-            throw new TodoApiException(HttpStatus.BAD_REQUEST, "Username already exists");
+            throw new BankApiException(HttpStatus.BAD_REQUEST, "Username already exists");
         }
 
         if(userRepo.existsByEmail(userDto.getEmail())){
-            throw new TodoApiException(HttpStatus.BAD_REQUEST, "Email already exists");
+            throw new BankApiException(HttpStatus.BAD_REQUEST, "Email already exists");
         }
 
         User user = new User();
