@@ -3,7 +3,6 @@ package com.Bank.app.security;
 import com.Bank.app.model.User;
 import com.Bank.app.repo.UserRepo;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

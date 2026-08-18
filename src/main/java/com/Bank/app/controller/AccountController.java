@@ -32,7 +32,7 @@ import java.util.Map;
 @RequestMapping("/api/accounts")
 public class AccountController {
 
-    private AccountService accountService;
+    private final AccountService accountService;
 
     @Operation(
             summary = "CREATE API",

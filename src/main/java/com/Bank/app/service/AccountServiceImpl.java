@@ -105,7 +105,6 @@ public class AccountServiceImpl implements AccountService {
         );
         accountRepository.delete(account);
     }
-
     @Transactional
     @Override
     public void transferFunds(TransferFundsDto transferFundsDto) {
